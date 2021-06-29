@@ -1,9 +1,11 @@
 package sharesies;
 
+import base.BasePage;
+
 /**
  * SharesiesHomePage
  */
-public class SharesiesHome {
+public class SharesiesHome extends BasePage {
 
     
 }

@@ -1,5 +1,7 @@
 package sharesies;
 
-public class SharesiesApp {
+import base.BasePage;
+
+public class SharesiesApp extends BasePage{
     
 }
