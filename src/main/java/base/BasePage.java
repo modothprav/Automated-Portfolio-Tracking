@@ -11,11 +11,12 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 public class BasePage {
     private final static String CONFIGPATH = "/src/main/java/config/config.properties";
-    
-
-    public static WebDriver driver;
+    protected static WebDriver driver;
     public static Properties config;
 
+    /**
+     * Constructor
+     */
     public BasePage(){
         // Read the config file into the properties variable
         try {
