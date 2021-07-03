@@ -15,6 +15,9 @@ public class SharesiesHome extends BasePage {
     @FindBy(xpath = "//nav[@id='mainNavigation']/div[@class='external']/a")
     private WebElement loginButton;
 
+    /**
+     * Constructor
+     */
     public SharesiesHome() {
         if (!driver.getTitle().equals("Sharesies | Investing made easy")) {
             throw new IllegalStateException("This is not the Sharesies Home Page, current Page is " 
