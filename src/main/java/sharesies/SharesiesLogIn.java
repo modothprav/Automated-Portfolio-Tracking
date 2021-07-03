@@ -40,20 +40,37 @@ public class SharesiesLogIn extends BasePage {
     }
 
     /**
-     * Saves the Login credential in the USERNAME and PASSWORD fileds.
+     * Saves the Login credentials in the USERNAME and PASSWORD fileds.
      * The crednetials are read from a file whose file path is specified 
      * in config.properties.
      */
     private void getCredentials() {
         Path filePath = Paths.get(config.getProperty("credentials.file"));
         try {
+            // Reads the file and slipts it into its username and password components
             String[] credentials = Files.readAllLines(filePath).get(2).split(",");
+            
             this.USERNAME = credentials[0];
             this.PASSWORD = credentials[1];
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }  
+    }
 
+    /**
+     * Obtains the necessary credentials required to log into the user's 
+     * account. Then enters the Username, password and clicks the Log In 
+     * button. Returns a Sharesies Application page.
+     * 
+     * @return SharesiesApp
+     */
+    public SharesiesApp logIn() {
+        this.getCredentials();
         
+        emailField.sendKeys(USERNAME);
+        passwordField.sendKeys(PASSWORD);
+
+        logInButton.click();
+        return new SharesiesApp();
     }
 }

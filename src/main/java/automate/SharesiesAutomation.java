@@ -1,6 +1,7 @@
 package automate;
 
 import base.BasePage;
+import sharesies.SharesiesApp;
 import sharesies.SharesiesHome;
 import sharesies.SharesiesLogIn;
 
@@ -11,5 +12,6 @@ public class SharesiesAutomation {
 
         SharesiesHome homePage = new SharesiesHome();
         SharesiesLogIn loginPage = homePage.clickLoginButton();
+        SharesiesApp app = loginPage.logIn();
     }
 }
