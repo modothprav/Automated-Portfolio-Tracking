@@ -2,6 +2,7 @@ package automate;
 
 import base.BasePage;
 import sharesies.SharesiesHome;
+import sharesies.SharesiesLogIn;
 
 public class SharesiesAutomation {    
     public static void main(String[] args) {
@@ -9,6 +10,6 @@ public class SharesiesAutomation {
         testBase.initialize();
 
         SharesiesHome homePage = new SharesiesHome();
-        homePage.clickLoginButton();
+        SharesiesLogIn loginPage = homePage.clickLoginButton();
     }
 }
