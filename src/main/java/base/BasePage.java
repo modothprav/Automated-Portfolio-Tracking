@@ -11,11 +11,12 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 public class BasePage {
     private final static String CONFIGPATH = "/src/main/java/config/config.properties";
-    
-
-    public static WebDriver driver;
+    protected static WebDriver driver;
     public static Properties config;
 
+    /**
+     * Constructor
+     */
     public BasePage(){
         // Read the config file into the properties variable
         try {
@@ -34,7 +35,7 @@ public class BasePage {
      * config.properties file. Deletes all cookies, sets the page load times
      * and opens the webpage with the desired url.
      */
-    public static void initialize() {
+    public void initialize() {
         String driverPath = System.getProperty("user.dir") + config.getProperty("driver.chromedriver.path");
         System.setProperty("webdriver.chrome.driver", driverPath);
 
