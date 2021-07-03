@@ -23,4 +23,26 @@ public class SharesiesHome extends BasePage {
         PageFactory.initElements(driver, this);
     }
 
+    /**
+     * Clicks the Log In Button on the Sharesies Home page and switches to the
+     * newly opened tab and closes the previous one. Returns a Sharesies Login Page
+     * 
+     * @return SharesiesLogIn
+     */
+    public SharesiesLogIn clickLoginButton() {
+        String originalWindow = driver.getWindowHandle();
+        
+        loginButton.click();
+
+        // Close and swticth the driver to the new tab
+        driver.close();
+        for (String windowHandle : driver.getWindowHandles()) {
+            if (!originalWindow.equals(windowHandle)) {
+                driver.switchTo().window(windowHandle);
+                break;
+            }
+        }
+
+        return new SharesiesLogIn();
+    }
 }

@@ -35,7 +35,7 @@ public class BasePage {
      * config.properties file. Deletes all cookies, sets the page load times
      * and opens the webpage with the desired url.
      */
-    public static void initialize() {
+    public void initialize() {
         String driverPath = System.getProperty("user.dir") + config.getProperty("driver.chromedriver.path");
         System.setProperty("webdriver.chrome.driver", driverPath);
 
