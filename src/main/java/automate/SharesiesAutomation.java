@@ -4,6 +4,7 @@ import base.BasePage;
 import sharesies.SharesiesApp;
 import sharesies.SharesiesHome;
 import sharesies.SharesiesLogIn;
+import sharesies.SharesiesReports;
 import sharesies.SharesiesSettings;
 
 public class SharesiesAutomation {    
@@ -15,5 +16,6 @@ public class SharesiesAutomation {
         SharesiesLogIn loginPage = homePage.clickLoginButton();
         SharesiesApp app = loginPage.logIn();
         SharesiesSettings settingsPage = app.clickSettings();
+        SharesiesReports reportsPage = settingsPage.clickReports();
     }
 }
