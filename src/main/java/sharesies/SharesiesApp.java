@@ -21,7 +21,7 @@ public class SharesiesApp extends BasePage{
     @FindBy(xpath = "//*[text()='Settings']")
     private WebElement settingsButton;
 
-    @FindBy(xpath = "//*[text()='Logout'")
+    @FindBy(xpath = "//*[text()='Logout']")
     private WebElement logoutButton;
 
     /**
@@ -34,6 +34,29 @@ public class SharesiesApp extends BasePage{
         }
 
         PageFactory.initElements(driver, this);
+    }
+
+    /**
+     * Click the Settings button on the Sharesies Application page.
+     * Once clicked will take you to the Settings Page.
+     * 
+     * @return SharesiesSettings
+     */
+    public SharesiesSettings clickSettings() {
+        settingsButton.click();
+        return new SharesiesSettings();
+    }
+
+    /**
+     * Clicks the Logout button on the Sharesies Application page,
+     * and logs out of the users account returning back to the 
+     * Shareseies Login Page.
+     * 
+     * @return SharesiesLogIn
+     */
+    public SharesiesLogIn clickLogOut() {
+        logoutButton.click();
+        return new SharesiesLogIn();
     }
 
 
