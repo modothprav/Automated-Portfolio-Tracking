@@ -17,5 +17,11 @@ public class SharesiesAutomation {
         SharesiesApp app = loginPage.logIn();
         SharesiesSettings settingsPage = app.clickSettings();
         SharesiesReports reportsPage = settingsPage.clickReports();
+        reportsPage.selectFromMonth("January");
+        reportsPage.selectFromYear("2020");
+        reportsPage.selectToMonth("June");
+        reportsPage.selectToYear("2021");
+        reportsPage.clickCSVReport();
+        reportsPage.clickExport();
     }
 }
