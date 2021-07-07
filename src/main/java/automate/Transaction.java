@@ -70,7 +70,7 @@ public final class Transaction {
     }
 
     public double getQuantity() {
-        return this.getQuantity();
+        return this.quantity;
     }
 
     public double getPrice() {
