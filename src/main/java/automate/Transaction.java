@@ -3,19 +3,19 @@ package automate;
 import java.time.LocalDate;
 
 
-public class Transaction {
-    private String orderID;
-    private LocalDate tradeDate;
-    private String stock;
-    private String market;
-    private double quantity;
-    private double price;
-    private String transactionType;
-    private double exchangeRate;
-    private double fees;
-    private String currency;
-    private double amount;
-    private String method;
+public final class Transaction {
+    private final String orderID;
+    private final LocalDate tradeDate;
+    private final String stock;
+    private final String market;
+    private final double quantity;
+    private final double price;
+    private final String transactionType;
+    private final double exchangeRate;
+    private final double fees;
+    private final String currency;
+    private final double amount;
+    private final String method;
 
     /**
      * Constructor - Creates a single Transaction object
