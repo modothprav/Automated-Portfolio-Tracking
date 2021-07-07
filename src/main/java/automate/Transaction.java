@@ -2,7 +2,6 @@ package automate;
 
 import java.time.LocalDate;
 
-
 public final class Transaction {
     private final String orderID;
     private final LocalDate tradeDate;
@@ -50,4 +49,55 @@ public final class Transaction {
         this.method = method;
     }
 
+    /*
+     * Getter methods
+    */
+
+    public String getOrderID() {
+        return this.orderID;
+    }
+
+    public LocalDate getTraDate() {
+        return this.tradeDate;
+    }
+
+    public String getStock() {
+        return this.stock;
+    }
+
+    public String getMarket() {
+        return this.market;
+    }
+
+    public double getQuantity() {
+        return this.getQuantity();
+    }
+
+    public double getPrice() {
+        return this.price;
+    }
+
+    public String getTransactionType() {
+        return this.transactionType;
+    }
+
+    public double getExchangeRate() {
+        return this.exchangeRate;
+    }
+
+    public double getFees() {
+        return this.fees;
+    }
+
+    public String getCurrency() {
+        return this.currency;
+    }
+
+    public double getAmount() {
+        return this.amount;
+    }
+
+    public String getTransactionMethod() {
+        return this.method;
+    }
 }
