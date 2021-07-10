@@ -35,6 +35,12 @@ public class SharesiesAutomation {
         reportsPage.clickCSVReport();
         reportsPage.clickExport();
 
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         List<Transaction> transactions = parseTransactions(testBase.config.getProperty("reports.csv.file"));
 
     }
