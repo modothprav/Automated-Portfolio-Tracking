@@ -42,7 +42,7 @@ public class SharesiesAutomation {
         }
 
         List<Transaction> transactions = parseTransactions(testBase.config.getProperty("reports.csv.file"));
-        ExcelDataEntry dataEntry = new ExcelDataEntry(transactions, "/Users/pravin/Documents/resources/Current Portfolio.xlsx");
+        ExcelDataEntry dataEntry = new ExcelDataEntry(transactions, testBase.config.getProperty("portfolio.excel.file"));
 
         dataEntry.updateExcelFile();
 
