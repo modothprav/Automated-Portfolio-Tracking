@@ -49,4 +49,11 @@ public class BasePage {
 
         driver.get(config.getProperty("url.sharesies"));
     }
+
+    /**
+     * Closes the Web browser.
+     */
+    public void tearDown() {
+        driver.quit();
+    }
 }

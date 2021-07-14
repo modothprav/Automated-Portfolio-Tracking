@@ -16,22 +16,26 @@ import sharesies.SharesiesSettings;
 
 public class SharesiesAutomation {    
     public static void main(String[] args) {
-
+        // Initialize base page and config properties
         BasePage testBase = new BasePage();
         testBase.initialize();
 
+        // Navigate to login page and Log in as user
         SharesiesHome homePage = new SharesiesHome();
         SharesiesLogIn loginPage = homePage.clickLoginButton();
         SharesiesApp app = loginPage.logIn();
         
+        // Navigate to reports page
         SharesiesSettings settingsPage = app.clickSettings();
         SharesiesReports reportsPage = settingsPage.clickReports();
         
+        // Enter Report details
         reportsPage.selectFromMonth("January");
         reportsPage.selectFromYear("2020");
         reportsPage.selectToMonth("July");
         reportsPage.selectToYear("2021");
         
+        // Export report and wait for download
         reportsPage.clickCSVReport();
         reportsPage.clickExport();
 
@@ -41,6 +45,11 @@ public class SharesiesAutomation {
             e.printStackTrace();
         }
 
+        // Close browser
+        app.clickLogOut();
+        testBase.tearDown();
+
+        // Parse and enter transaction details into excel
         List<Transaction> transactions = parseTransactions(testBase.config.getProperty("reports.csv.file"));
         ExcelDataEntry dataEntry = new ExcelDataEntry(transactions, testBase.config.getProperty("portfolio.excel.file"));
 
