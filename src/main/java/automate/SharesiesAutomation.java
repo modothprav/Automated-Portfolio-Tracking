@@ -29,7 +29,7 @@ public class SharesiesAutomation {
         
         reportsPage.selectFromMonth("January");
         reportsPage.selectFromYear("2020");
-        reportsPage.selectToMonth("June");
+        reportsPage.selectToMonth("July");
         reportsPage.selectToYear("2021");
         
         reportsPage.clickCSVReport();
@@ -42,6 +42,9 @@ public class SharesiesAutomation {
         }
 
         List<Transaction> transactions = parseTransactions(testBase.config.getProperty("reports.csv.file"));
+        ExcelDataEntry dataEntry = new ExcelDataEntry(transactions, "/Users/pravin/Documents/resources/Current Portfolio.xlsx");
+
+        dataEntry.updateExcelFile();
 
     }
 
@@ -76,7 +79,7 @@ public class SharesiesAutomation {
                 double fees = values[8].isEmpty() ? 0 : Double.parseDouble((values[8]));
                 String currency = values[9];
                 double amount = Double.parseDouble(values[10]);
-                String method = values[10];
+                String method = values[11];
 
                 result.add(new Transaction(orderID, tradeDate, stock, market, quantity, price, 
                 transactionType, exchangeRate, fees, currency, amount, method));
