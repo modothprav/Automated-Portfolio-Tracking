@@ -29,13 +29,13 @@ public class ExcelDataEntry {
      */
     public ExcelDataEntry(List<Transaction> transactions, String filePath) {
         this.transactions = new ArrayList<Transaction>(transactions);
-        this.filepath = filePath;
+        this.filepath = System.getProperty("user.dir").toString() + filePath;
         // If file not specified then create a spreadsheet
         if (filePath == null) {
             this.workbook = new XSSFWorkbook();
         } else {
             try {
-                FileInputStream file = new FileInputStream(new File(filePath));
+                FileInputStream file = new FileInputStream(new File(this.filepath));
                 this.workbook = new XSSFWorkbook(file);
                 file.close();
             } catch (Exception e) {
