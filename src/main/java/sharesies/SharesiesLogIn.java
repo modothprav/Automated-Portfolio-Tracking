@@ -44,7 +44,7 @@ public class SharesiesLogIn extends BasePage {
      * in config.properties.
      */
     private void getCredentials() {
-        Path filePath = Paths.get(config.getProperty("credentials.file"));
+        Path filePath = Paths.get(System.getProperty("user.dir").toString() + config.getProperty("credentials.file"));
         try {
             // Reads the file and slipts it into its username and password components
             String[] credentials = Files.readAllLines(filePath).get(2).split(",");

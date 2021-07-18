@@ -1,0 +1,25 @@
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+out/
+artifacts/
+
+# Mac
+.DS_Store
+
+# Maven
+target/ 
+
+#VS Code
+.vscode
+bin/
+
+# Assets
+credentials
+Portfolio.xlsx
