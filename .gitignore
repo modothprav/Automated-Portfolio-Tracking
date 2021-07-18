@@ -15,3 +15,11 @@ artifacts/
 
 # Maven
 target/ 
+
+#VS Code
+.vscode
+bin/
+
+# Assets
+credentials
+Portfolio.xlsx
