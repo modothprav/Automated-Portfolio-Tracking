@@ -1,6 +1,7 @@
 package automate;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public final class Transaction {
     private final String orderID;
@@ -36,7 +37,7 @@ public final class Transaction {
                         double quantity, double price, String transactionType, double exchangeRate, 
                         double fees, String currency, double amount, String method) {
         this.orderID = orderID;
-        this.tradeDate = LocalDate.parse(tradeDate);
+        this.tradeDate = LocalDate.parse(tradeDate, DateTimeFormatter.ofPattern("yyyy-MM-d"));
         this.stock = stock;
         this.market = market;
         this.quantity = quantity;

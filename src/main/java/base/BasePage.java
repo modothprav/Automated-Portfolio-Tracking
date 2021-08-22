@@ -20,9 +20,9 @@ public class BasePage {
     public BasePage(){
         // Read the config file into the properties variable
         try {
-            this.config = new Properties();
+            BasePage.config = new Properties();
             FileInputStream ip = new FileInputStream(System.getProperty("user.dir").toString() + CONFIGPATH);
-            this.config.load(ip);
+            BasePage.config.load(ip);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -35,7 +35,7 @@ public class BasePage {
      * config.properties file. Deletes all cookies, sets the page load times
      * and opens the webpage with the desired url.
      */
-    public void initialize() {
+    public void initialize(String configURL) {
         String driverPath = System.getProperty("user.dir") + config.getProperty("driver.chromedriver.path");
         System.setProperty("webdriver.chrome.driver", driverPath);
 
@@ -47,7 +47,7 @@ public class BasePage {
         driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 
-        driver.get(config.getProperty("url.sharesies"));
+        driver.get(config.getProperty(configURL));
     }
 
     /**

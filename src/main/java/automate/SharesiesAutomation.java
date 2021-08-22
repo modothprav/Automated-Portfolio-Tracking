@@ -18,7 +18,7 @@ public class SharesiesAutomation {
     public static void main(String[] args) {
         // Initialize base page and config properties
         BasePage testBase = new BasePage();
-        testBase.initialize();
+        testBase.initialize("url.sharesies");
 
         // Navigate to login page and Log in as user
         SharesiesHome homePage = new SharesiesHome();
@@ -50,10 +50,9 @@ public class SharesiesAutomation {
         testBase.tearDown();
 
         // Parse and enter transaction details into excel
-        List<Transaction> transactions = parseTransactions(testBase.config.getProperty("reports.csv.file"));
-        ExcelDataEntry dataEntry = new ExcelDataEntry(transactions, testBase.config.getProperty("portfolio.excel.file"));
+        List<Transaction> transactions = parseTransactions(BasePage.config.getProperty("reports.csv.file"));
 
-        dataEntry.updateExcelFile();
+        testBase.initialize("url.yahoo.finance");        
 
     }
 
