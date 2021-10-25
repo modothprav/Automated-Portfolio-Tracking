@@ -21,7 +21,7 @@ public class SharesiesApp extends BasePage{
     @FindBy(xpath = "//*[text()='Settings']")
     private WebElement settingsButton;
 
-    @FindBy(xpath = "//*[text()='Logout']")
+    @FindBy(xpath = "//*[text()='Log out']")
     private WebElement logoutButton;
 
     /**
