@@ -1,9 +1,12 @@
 package sharesies;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Properties;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -12,9 +15,6 @@ import org.openqa.selenium.support.PageFactory;
 import base.BasePage;
 
 public class SharesiesLogIn extends BasePage {
-    
-    private String USERNAME;
-    private String PASSWORD;
 
     // Object Reposotiry
     @FindBy(name = "email")
@@ -39,24 +39,6 @@ public class SharesiesLogIn extends BasePage {
     }
 
     /**
-     * Saves the Login credentials in the USERNAME and PASSWORD fileds.
-     * The crednetials are read from a file whose file path is specified 
-     * in config.properties.
-     */
-    private void getCredentials() {
-        Path filePath = Paths.get(System.getProperty("user.dir").toString() + config.getProperty("credentials.file"));
-        try {
-            // Reads the file and slipts it into its username and password components
-            String[] credentials = Files.readAllLines(filePath).get(2).split(",");
-            
-            this.USERNAME = credentials[0];
-            this.PASSWORD = credentials[1];
-        } catch (IOException e) {
-            e.printStackTrace();
-        }  
-    }
-
-    /**
      * Obtains the necessary credentials required to log into the user's 
      * account. Then enters the Username, password and clicks the Log In 
      * button. Returns a Sharesies Application page.
@@ -64,12 +46,20 @@ public class SharesiesLogIn extends BasePage {
      * @return SharesiesApp
      */
     public SharesiesApp logIn() {
-        this.getCredentials();
+        Properties credentials = new Properties();
+        try {
+            FileInputStream ip = new FileInputStream(System.getProperty("user.dir").toString() + config.getProperty("credentials.file"));
+            credentials.load(ip);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         
-        emailField.sendKeys(USERNAME);
-        passwordField.sendKeys(PASSWORD);
-
+        emailField.sendKeys(credentials.getProperty("sharesies.username"));
+        passwordField.sendKeys(credentials.getProperty("sharesies.password"));
+        
+        credentials.clear();
         logInButton.click();
+
         return new SharesiesApp();
     }
 }
