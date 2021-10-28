@@ -37,22 +37,44 @@ public class YahooLogin extends BasePage {
         PageFactory.initElements(driver, this);
     }
 
+    /**
+     * Enters the given username into the username field
+     * in the Yahoo login page.
+     * @param username String
+     */
     private void enterUsername(String username) {
         this.usernameField.sendKeys(username);
     }
 
+    /**
+     * Enter the given password into the the password field
+     * in the Yahoo login page.
+     * @param password String
+     */
     private void enterPassword(String password) {
         this.passwordField.sendKeys(password);
     }
 
+    /**
+     * Toggles the 'Stay Signed in' checkbox
+     */
     public void clickCheckBox() {
         this.sessionCheckBox.click();
     }
 
+    /**
+     * Click the 'Next' button in the Yahoo login page
+     */
     private void clickNextButton() {
         this.nextButton.click();
     }
 
+    /**
+     * Load the credentials properties file and uses the values within
+     * to enter the username and password and log into the user's Yahoo
+     * Account. Returns a Yahoo Home page object.
+     * @return YahooHome
+     */
     public YahooHome login() {
         Properties credentials = new Properties();
         try {
@@ -72,7 +94,5 @@ public class YahooLogin extends BasePage {
 
         return new YahooHome();
     }
-
-
     
 }

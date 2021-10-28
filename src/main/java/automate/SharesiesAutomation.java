@@ -13,6 +13,7 @@ import sharesies.SharesiesHome;
 import sharesies.SharesiesLogIn;
 import sharesies.SharesiesReports;
 import sharesies.SharesiesSettings;
+import yahooFinance.YahooLogin;
 
 public class SharesiesAutomation {    
     public static void main(String[] args) {
@@ -52,7 +53,10 @@ public class SharesiesAutomation {
         // Parse and enter transaction details into excel
         List<Transaction> transactions = parseTransactions(BasePage.config.getProperty("reports.csv.file"));
 
-        testBase.initialize("url.yahoo.finance");        
+        testBase.initialize("url.yahoo.finance");
+        
+        YahooLogin yahooLogin = new YahooLogin();
+        yahooLogin.login();
 
     }
 
