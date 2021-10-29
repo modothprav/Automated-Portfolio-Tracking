@@ -28,25 +28,50 @@ public class YahooHome extends BasePage{
         PageFactory.initElements(driver, this);
     }
 
+    /**
+     * Clicks the 'Finance' available at the navigaiton bar on 
+     * the Yahoo Home page. Returns a YahooFinance page object.
+     * @return YahooFinance
+     */
     public YahooFinance goToYahooFinance() {
         this.financeLink.click();
         return new YahooFinance();
     }
 
+    /**
+     * Clicks the profile button on the Yahoo home page.
+     * Is a helper method for signing out a user.
+     */
     private void clickProfile() {
         this.profileButton.click();
     }
 
+    /**
+     * Clicks the Sign out button from the profile dropdown menu.
+     */
     private void clickSignOut() {
         this.signOutLink.click();
     }
 
+    /**
+     * Logs out a user from their Yahoo account. Uses helper
+     * methods and returns a Yahoo home page for an 
+     * unauthenticated user.
+     * @return YahooHome
+     */
     public YahooHome signOut() {
         this.clickProfile();
         this.clickSignOut();
         return new YahooHome();
     }
 
+    /**
+     * Clicks the Sign in button on the Yahoo Home page.
+     * Will take you to the login page and return a YahooLogin
+     * page object. Note: this is only available for 
+     * unauthenticated users.
+     * @return YahooLogin
+     */
     public YahooLogin clickSignIn() {
         signInButton.click();
         return new YahooLogin();
