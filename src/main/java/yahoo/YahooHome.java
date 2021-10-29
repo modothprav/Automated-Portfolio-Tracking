@@ -1,4 +1,4 @@
-package yahooFinance;
+package yahoo;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -28,8 +28,9 @@ public class YahooHome extends BasePage{
         PageFactory.initElements(driver, this);
     }
 
-    public void goToYahooFinance() {
+    public YahooFinance goToYahooFinance() {
         this.financeLink.click();
+        return new YahooFinance();
     }
 
     private void clickProfile() {

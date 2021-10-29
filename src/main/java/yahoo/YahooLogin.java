@@ -1,4 +1,4 @@
-package yahooFinance;
+package yahoo;
 
 import java.io.FileInputStream;
 import java.io.IOException;
