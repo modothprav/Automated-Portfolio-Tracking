@@ -13,7 +13,9 @@ import sharesies.SharesiesHome;
 import sharesies.SharesiesLogIn;
 import sharesies.SharesiesReports;
 import sharesies.SharesiesSettings;
-import yahooFinance.YahooLogin;
+import yahoo.YahooFinance;
+import yahoo.YahooHome;
+import yahoo.YahooLogin;
 
 public class SharesiesAutomation {    
     public static void main(String[] args) {
@@ -56,8 +58,8 @@ public class SharesiesAutomation {
         testBase.initialize("url.yahoo.finance");
         
         YahooLogin yahooLogin = new YahooLogin();
-        yahooLogin.login();
-
+        YahooHome yahooHome = yahooLogin.login();
+        YahooFinance yahooFinance = yahooHome.goToYahooFinance();
     }
 
     /**
