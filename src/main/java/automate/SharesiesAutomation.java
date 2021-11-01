@@ -16,6 +16,7 @@ import sharesies.SharesiesSettings;
 import yahoo.YahooFinance;
 import yahoo.YahooHome;
 import yahoo.YahooLogin;
+import yahoo.YahooPortfolioData;
 import yahoo.YahooPortfolios;
 
 public class SharesiesAutomation {    
@@ -63,6 +64,7 @@ public class SharesiesAutomation {
 
         YahooFinance yahooFinance = yahooHome.goToYahooFinance();
         YahooPortfolios allPortfolios = yahooFinance.goToPortfolioPage();
+        YahooPortfolioData portfolioData = allPortfolios.clickPortfolio();
     }
 
     /**

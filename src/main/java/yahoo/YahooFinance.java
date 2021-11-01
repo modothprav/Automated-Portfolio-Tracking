@@ -3,6 +3,8 @@ package yahoo;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import base.BasePage;
 
@@ -41,6 +43,7 @@ public class YahooFinance extends BasePage {
      */
     public YahooPortfolios goToPortfolioPage() {
         this.portfolioLink.click();
+        new WebDriverWait(driver, 8).until(ExpectedConditions.titleIs("Stock portfolio & tracker – Yahoo Finance"));
         return new YahooPortfolios();
     }
 
