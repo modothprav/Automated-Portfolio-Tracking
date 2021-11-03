@@ -43,6 +43,11 @@ public class YahooPortfolioData extends BasePage {
         return driver.findElements(By.xpath("//table/tbody/*"));
     }
 
+    public void addLot(int stockRow) {
+        WebElement addLotButton = driver.findElement(By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()]/td/button"));
+        addLotButton.click();
+    }
+
 
 
 }
