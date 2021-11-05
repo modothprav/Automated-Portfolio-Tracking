@@ -7,6 +7,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindAll;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import base.BasePage;
 
@@ -44,8 +46,24 @@ public class YahooPortfolioData extends BasePage {
     }
 
     public void addLot(int stockRow) {
-        WebElement addLotButton = driver.findElement(By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()]/td/button"));
+
+        By transactions = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/*");
+        By buttonPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()]/td/button");
+
+        int count = driver.findElements(transactions).size();
+        WebElement addLotButton = driver.findElement(buttonPath);
         addLotButton.click();
+        
+        new WebDriverWait(driver, 8).until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
+    }
+
+    private void enterDate(int stockRow, String date) {
+        WebElement dateInput = driver.findElement(By.xpath("//table/tbody[" + stockRow + "]/tr[3]/td/table/tbody/tr[last()-1]/td[1]/input[@type='date']"));
+        dateInput.sendKeys(date);
+    }
+
+    public void enterTransaction(int stockRow, String date) {
+        this.enterDate(stockRow, date);
     }
 
 
