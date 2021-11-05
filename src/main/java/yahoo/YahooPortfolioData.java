@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindAll;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -53,17 +52,32 @@ public class YahooPortfolioData extends BasePage {
         int count = driver.findElements(transactions).size();
         WebElement addLotButton = driver.findElement(buttonPath);
         addLotButton.click();
-        
+
         new WebDriverWait(driver, 8).until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
     }
 
     private void enterDate(int stockRow, String date) {
-        WebElement dateInput = driver.findElement(By.xpath("//table/tbody[" + stockRow + "]/tr[3]/td/table/tbody/tr[last()-1]/td[1]/input[@type='date']"));
+        By dateInputPath = By.xpath("//table/tbody[" + stockRow + "]/tr[3]/td/table/tbody/tr[last()-1]/td[1]/input[@type='date']");
+        WebElement dateInput = driver.findElement(dateInputPath);
         dateInput.sendKeys(date);
     }
 
-    public void enterTransaction(int stockRow, String date) {
+    private void enterShares(int stockRow, int shares) {
+        By numSharesPath = By.xpath("//table/tbody[" + stockRow + "]/tr[3]/td/table/tbody/tr[last()-1]/td[2]/input[@type='number']");
+        WebElement sharesInput = driver.findElement(numSharesPath);
+        sharesInput.sendKeys(String.valueOf(shares));
+    }
+
+    private void enterPrice(int stockRow, int price) {
+        By pricePath = By.xpath("//table/tbody[" + stockRow + "]/tr[3]/td/table/tbody/tr[last()-1]/td[3]/input[@type='number']");
+        WebElement priceInput = driver.findElement(pricePath);
+        priceInput.sendKeys(String.valueOf(price));
+    }
+
+    public void enterTransaction(int stockRow, String date, int shares, int price) {
         this.enterDate(stockRow, date);
+        this.enterShares(stockRow, shares);
+        this.enterPrice(stockRow, price);
     }
 
 
