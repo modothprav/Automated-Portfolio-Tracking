@@ -74,10 +74,23 @@ public class YahooPortfolioData extends BasePage {
         priceInput.sendKeys(String.valueOf(price));
     }
 
-    public void enterTransaction(int stockRow, String date, int shares, int price) {
+    private void enterNotes(int stockRow, String notes) {
+        By notesPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()-1]/td[8]/input[@type='text']");
+        WebElement notesInput = driver.findElement(notesPath);
+        notesInput.sendKeys(notes);
+    }
+
+    public void enterTransaction(int stockRow, String date, int shares, int price, String notes) {
         this.enterDate(stockRow, date);
         this.enterShares(stockRow, shares);
         this.enterPrice(stockRow, price);
+        this.enterNotes(stockRow, notes);
+    }
+
+    public void deleteTransaction(int stockRow) {
+        By deletePath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()-1]/td[last()]/button");
+        WebElement deleteButton = driver.findElement(deletePath);
+        deleteButton.click();
     }
 
 
