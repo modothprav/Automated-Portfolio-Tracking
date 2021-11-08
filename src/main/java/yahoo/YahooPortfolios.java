@@ -1,6 +1,8 @@
 package yahoo;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import base.BasePage;
 
@@ -26,6 +28,7 @@ public class YahooPortfolios extends BasePage {
      */
     public YahooPortfolioData clickPortfolio() {
         driver.findElement(By.xpath("//a[text()='" + portfolioName +  "']")).click();
+        new WebDriverWait(driver, 8).until(ExpectedConditions.titleIs(portfolioName + " - Stock portfolio & tracker – Yahoo Finance"));
         return new YahooPortfolioData();
     }
     

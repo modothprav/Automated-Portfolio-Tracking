@@ -3,6 +3,8 @@ package yahoo;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import base.BasePage;
 
@@ -35,6 +37,7 @@ public class YahooHome extends BasePage{
      */
     public YahooFinance goToYahooFinance() {
         this.financeLink.click();
+        new WebDriverWait(driver, 8).until(ExpectedConditions.titleIs("Yahoo Finance – stock market live, quotes, business & finance news"));
         return new YahooFinance();
     }
 
