@@ -48,7 +48,7 @@ public class SharesiesReports extends BasePage {
      * 
      * @param month String which represents a month of the year
      */
-    public void selectFromMonth(String month) {
+    private void selectFromMonth(String month) {
         Select fromMonth = new Select(this.fromMonthField);
         fromMonth.selectByVisibleText(month);
     }
@@ -60,7 +60,7 @@ public class SharesiesReports extends BasePage {
      * 
      * @param month String which represents a month of the year
      */
-    public void selectToMonth(String month) {
+    private void selectToMonth(String month) {
         Select toMonth = new Select(this.toMonthField);
         toMonth.selectByVisibleText(month);
     }
@@ -71,7 +71,7 @@ public class SharesiesReports extends BasePage {
      * 
      * @param year String which represents the year
      */
-    public void selectFromYear(String year) {
+    private void selectFromYear(String year) {
         Select fromYear = new Select(this.fromYearField);
         fromYear.selectByVisibleText(year);
     }
@@ -82,9 +82,24 @@ public class SharesiesReports extends BasePage {
      * 
      * @param year String which represents the year
      */
-    public void selectToYear(String year) {
+    private void selectToYear(String year) {
         Select toYear = new Select(this.toYearField);
         toYear.selectByVisibleText(year);
+    }
+
+    /**
+     * Selects the starting and ending month and year 
+     * period the transactions history should include.
+     * @param fromMonth String The starting month e.g. "January"
+     * @param toMonth String The ending month e.g. "October"
+     * @param fromYear String The starting year e.g. "2021"
+     * @param toYear String The ending year e.g. "2000"
+     */
+    public void enterReportDetails(String fromMonth, String toMonth, String fromYear, String toYear) {
+        this.selectFromMonth(fromMonth);
+        this.selectToMonth(toMonth);
+        this.selectFromYear(fromYear);
+        this.selectToYear(toYear);
     }
 
     /**

@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openqa.selenium.WebElement;
+
 import base.BasePage;
 import sharesies.SharesiesApp;
 import sharesies.SharesiesHome;
@@ -35,10 +37,7 @@ public class SharesiesAutomation {
         SharesiesReports reportsPage = settingsPage.clickReports();
         
         // Enter Report details
-        reportsPage.selectFromMonth("January");
-        reportsPage.selectFromYear("2020");
-        reportsPage.selectToMonth("July");
-        reportsPage.selectToYear("2021");
+        reportsPage.enterReportDetails("April", "October", "2020", "2021");
         
         // Export report and wait for download
         reportsPage.clickCSVReport();
@@ -65,6 +64,8 @@ public class SharesiesAutomation {
         YahooFinance yahooFinance = yahooHome.goToYahooFinance();
         YahooPortfolios allPortfolios = yahooFinance.goToPortfolioPage();
         YahooPortfolioData portfolioData = allPortfolios.clickPortfolio();
+        portfolioData.clickHoldingsTab();
+        System.out.println(portfolioData.getStockRow("AIA.NZ"));
     }
 
     /**
