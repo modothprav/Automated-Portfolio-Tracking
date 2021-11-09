@@ -2,6 +2,7 @@ package yahoo;
 
 import java.util.List;
 
+import org.apache.poi.util.SystemOutLogger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -152,6 +153,23 @@ public class YahooPortfolioData extends BasePage {
         By deletePath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()-1]/td[last()]/button");
         WebElement deleteButton = driver.findElement(deletePath);
         deleteButton.click();
+    }
+
+    /**
+     * Gets the row number by the given stock name in the holdings
+     * table. If the stock is not found on the holdings table -1 is
+     * returned.
+     * @param name String The name of the stock.
+     * @return int Row number of the stock in the holdings table.
+     */
+    public int getStockRow(String name) {
+        List<WebElement> stocks = this.getStockHoldings();
+        for (int i = 1; i < stocks.size() + 1; i++) {
+            By namePath = By.xpath("//table/tbody["+ i +"]/tr[2]/td[2]/div/a");
+            String stockName = driver.findElement(namePath).getText();
+            if (stockName.equals(name)) { return i; }
+        }
+        return -1;
     }
 
 
