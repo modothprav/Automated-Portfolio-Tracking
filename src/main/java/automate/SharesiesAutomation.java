@@ -37,7 +37,7 @@ public class SharesiesAutomation {
         SharesiesReports reportsPage = settingsPage.clickReports();
         
         // Enter Report details
-        reportsPage.enterReportDetails("April", "October", "2020", "2021");
+        reportsPage.enterReportDetails("January", "October", "2019", "2021");
         
         // Export report and wait for download
         reportsPage.clickCSVReport();
@@ -58,14 +58,37 @@ public class SharesiesAutomation {
 
         testBase.initialize("url.yahoo.finance");
         
+        // Log into Yahoo account
         YahooLogin yahooLogin = new YahooLogin();
         YahooHome yahooHome = yahooLogin.login();
 
+        // Navigate to portfolio page
         YahooFinance yahooFinance = yahooHome.goToYahooFinance();
         YahooPortfolios allPortfolios = yahooFinance.goToPortfolioPage();
+        
+        // Navigate to Portfolio data tab with all transactions 
         YahooPortfolioData portfolioData = allPortfolios.clickPortfolio();
         portfolioData.clickHoldingsTab();
-        System.out.println(portfolioData.getStockRow("AIA.NZ"));
+
+        boolean clicked = false;
+
+        for (Transaction t : transactions) {
+            if (t.getStock().equals("HLG")) {
+                int row = portfolioData.getStockRow("HLG.NZ");
+
+                if (!clicked) { 
+                    portfolioData.clickDropdown(row); 
+                    clicked = true;
+                }
+
+                String date = t.getTraDate().getDayOfMonth() + "" + t.getTraDate().getMonthValue() + "" + t.getTraDate().getYear();
+                
+                portfolioData.enterTransaction(row, date, t.getQuantity(), t.getPrice(), t.getOrderID());
+                portfolioData.addLot(row);
+                
+            }
+        }
+
     }
 
     /**

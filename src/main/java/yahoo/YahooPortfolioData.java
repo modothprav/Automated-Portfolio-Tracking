@@ -75,7 +75,14 @@ public class YahooPortfolioData extends BasePage {
         addLotButton.click();
 
         // Wait until new element row is loaded
-        new WebDriverWait(driver, 8).until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
+        try {
+            new WebDriverWait(driver, 10).until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
+        } catch (Exception e) {
+            System.out.println("Error Caught, clicking again");
+            addLotButton.click();
+            new WebDriverWait(driver, 10).until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
+        }
+        
     }
 
     /**
@@ -97,7 +104,7 @@ public class YahooPortfolioData extends BasePage {
      * @param stockRow int The Row number of the stock to enter the transaction value for.
      * @param shares int The numner of shares
      */
-    private void enterShares(int stockRow, int shares) {
+    private void enterShares(int stockRow, double shares) {
         By numSharesPath = By.xpath("//table/tbody[" + stockRow + "]/tr[3]/td/table/tbody/tr[last()-1]/td[2]/input[@type='number']");
         WebElement sharesInput = driver.findElement(numSharesPath);
         sharesInput.sendKeys(String.valueOf(shares));
@@ -109,7 +116,7 @@ public class YahooPortfolioData extends BasePage {
      * @param stockRow int The Row number of the stock to enter the transaction value for.
      * @param price int The Price of a single share.
      */
-    private void enterPrice(int stockRow, int price) {
+    private void enterPrice(int stockRow, double price) {
         By pricePath = By.xpath("//table/tbody[" + stockRow + "]/tr[3]/td/table/tbody/tr[last()-1]/td[3]/input[@type='number']");
         WebElement priceInput = driver.findElement(pricePath);
         priceInput.sendKeys(String.valueOf(price));
@@ -138,7 +145,7 @@ public class YahooPortfolioData extends BasePage {
      * @param price int The Price of a single share.
      * @param notes String any Notes to add on the current transaction
      */
-    public void enterTransaction(int stockRow, String date, int shares, int price, String notes) {
+    public void enterTransaction(int stockRow, String date, double shares, double price, String notes) {
         this.enterDate(stockRow, date);
         this.enterShares(stockRow, shares);
         this.enterPrice(stockRow, price);
