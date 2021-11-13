@@ -2,7 +2,6 @@ package yahoo;
 
 import java.util.List;
 
-import org.apache.poi.util.SystemOutLogger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -74,11 +73,10 @@ public class YahooPortfolioData extends BasePage {
         WebElement addLotButton = driver.findElement(buttonPath);
         addLotButton.click();
 
-        // Wait until new element row is loaded
+        // Check if button clicked and row loaded, if not try again
         try {
-            new WebDriverWait(driver, 10).until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
+            new WebDriverWait(driver, 1).until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
         } catch (Exception e) {
-            System.out.println("Error Caught, clicking again");
             addLotButton.click();
             new WebDriverWait(driver, 10).until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
         }

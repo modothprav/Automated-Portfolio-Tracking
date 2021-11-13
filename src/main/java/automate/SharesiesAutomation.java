@@ -5,9 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import org.openqa.selenium.WebElement;
+import java.util.Map;
 
 import base.BasePage;
 import sharesies.SharesiesApp;
@@ -54,7 +54,7 @@ public class SharesiesAutomation {
         testBase.tearDown();
 
         // Parse and enter transaction details into excel
-        List<Transaction> transactions = parseTransactions(BasePage.config.getProperty("reports.csv.file"));
+        Map<String, List<Transaction>> transactions = parseTransactions(BasePage.config.getProperty("reports.csv.file"));
 
         testBase.initialize("url.yahoo.finance");
         
@@ -72,7 +72,7 @@ public class SharesiesAutomation {
 
         boolean clicked = false;
 
-        for (Transaction t : transactions) {
+        for (Transaction t : transactions.get("HLG")) {
             if (t.getStock().equals("HLG")) {
                 int row = portfolioData.getStockRow("HLG.NZ");
 
@@ -94,13 +94,14 @@ public class SharesiesAutomation {
     /**
      * Read the CSV Transaction report downloaded from Sharesies. Save the 
      * information in the report by creating Transaction objects, these objects
-     * will be returned in the form of a list.
+     * will be returned in the form of a Map with the stock as the key and its
+     * value being a list of transactions regarding that stock.
      * 
      * @param filePath The file path of the CSV Transaction report
-     * @return A List of Transaction objects
+     * @return Map<String, List<Transaction>>
      */
-    private static List<Transaction> parseTransactions(String filePath) {
-        List<Transaction> result = new ArrayList<>();
+    private static Map<String, List<Transaction>> parseTransactions(String filePath) {
+        Map<String, List<Transaction>> result = new HashMap<>();
 
         try {
             BufferedReader buffer = new BufferedReader(new FileReader(filePath));
@@ -124,8 +125,17 @@ public class SharesiesAutomation {
                 double amount = Double.parseDouble(values[10]);
                 String method = values[11];
 
-                result.add(new Transaction(orderID, tradeDate, stock, market, quantity, price, 
-                transactionType, exchangeRate, fees, currency, amount, method));
+                // Add Key if not present
+                if (!result.keySet().contains(stock)) { result.put(stock, new ArrayList<Transaction>()); }
+
+                Transaction transaction = new Transaction(orderID, tradeDate, stock, market, quantity, price, 
+                transactionType, exchangeRate, fees, currency, amount, method);
+
+                // Add transaction
+                result.get(stock).add(transaction);
+
+                //result.add(new Transaction(orderID, tradeDate, stock, market, quantity, price, 
+                //transactionType, exchangeRate, fees, currency, amount, method));
             }
 
             buffer.close();
