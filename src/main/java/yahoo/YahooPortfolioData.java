@@ -1,8 +1,10 @@
 package yahoo;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -41,12 +43,26 @@ public class YahooPortfolioData extends BasePage {
 
     /**
      * Clicks the dropdown button to view all individual
-     * transactions for the current stock.
+     * transactions for the current stock and returns true. If its the first transaction
+     * to be entered for the stock, then the add lot button will be cliked
+     * within the row hence performing a dropdown and a false value will be returned. 
      * @param stockRow int Row number of Stock to view transactions for
+     * @return boolean True if the dropdown button is clicked false otherwise.
      */
-    public void clickDropdown(int stockRow) {
-        WebElement button = driver.findElement(By.xpath("//table/tbody["+ stockRow +"]/tr[2]/td/button"));
-        button.click();
+    public boolean clickDropdown(int stockRow) {
+        WebElement button;
+        boolean result = true;
+        try {
+            button = driver.findElement(By.xpath("//table/tbody["+ stockRow +"]/tr[2]/td/button"));
+        } catch (NoSuchElementException e) {
+            result = false;
+            button = driver.findElement(By.xpath("//table/tbody[" + stockRow + "]/tr[2]/td[9]/button"));
+        } 
+
+        JavascriptExecutor executor = (JavascriptExecutor) driver;
+        executor.executeScript("arguments[0].click();", button);
+        //button.click();
+        return result;
     }
 
     /**
@@ -54,7 +70,7 @@ public class YahooPortfolioData extends BasePage {
      * @return List<WebElement> A list of WebElement objects
      */
     public List<WebElement> getStockHoldings() {
-        return driver.findElements(By.xpath("//table/tbody/*"));
+        return driver.findElements(By.xpath("//table/tbody[*]"));
     }
 
     /**
@@ -71,13 +87,17 @@ public class YahooPortfolioData extends BasePage {
         // Add new transaction row
         int count = driver.findElements(transactions).size();
         WebElement addLotButton = driver.findElement(buttonPath);
-        addLotButton.click();
+
+        JavascriptExecutor executor = (JavascriptExecutor) driver;
+        executor.executeScript("arguments[0].click();", addLotButton);
+        
+        //addLotButton.click();
 
         // Check if button clicked and row loaded, if not try again
         try {
             new WebDriverWait(driver, 1).until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
         } catch (Exception e) {
-            addLotButton.click();
+            executor.executeScript("arguments[0].click();", addLotButton);
             new WebDriverWait(driver, 10).until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
         }
         
@@ -106,6 +126,7 @@ public class YahooPortfolioData extends BasePage {
         By numSharesPath = By.xpath("//table/tbody[" + stockRow + "]/tr[3]/td/table/tbody/tr[last()-1]/td[2]/input[@type='number']");
         WebElement sharesInput = driver.findElement(numSharesPath);
         sharesInput.sendKeys(String.valueOf(shares));
+        
     }
 
     /**
@@ -169,6 +190,7 @@ public class YahooPortfolioData extends BasePage {
      */
     public int getStockRow(String name) {
         List<WebElement> stocks = this.getStockHoldings();
+
         for (int i = 1; i < stocks.size() + 1; i++) {
             By namePath = By.xpath("//table/tbody["+ i +"]/tr[2]/td[2]/div/a");
             String stockName = driver.findElement(namePath).getText();

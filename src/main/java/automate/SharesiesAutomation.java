@@ -25,33 +25,33 @@ public class SharesiesAutomation {
     public static void main(String[] args) {
         // Initialize base page and config properties
         BasePage testBase = new BasePage();
-        testBase.initialize("url.sharesies");
+        // testBase.initialize("url.sharesies");
 
-        // Navigate to login page and Log in as user
-        SharesiesHome homePage = new SharesiesHome();
-        SharesiesLogIn loginPage = homePage.clickLoginButton();
-        SharesiesApp app = loginPage.logIn();
+        // // Navigate to login page and Log in as user
+        // SharesiesHome homePage = new SharesiesHome();
+        // SharesiesLogIn loginPage = homePage.clickLoginButton();
+        // SharesiesApp app = loginPage.logIn();
         
-        // Navigate to reports page
-        SharesiesSettings settingsPage = app.clickSettings();
-        SharesiesReports reportsPage = settingsPage.clickReports();
+        // // Navigate to reports page
+        // SharesiesSettings settingsPage = app.clickSettings();
+        // SharesiesReports reportsPage = settingsPage.clickReports();
         
-        // Enter Report details
-        reportsPage.enterReportDetails("January", "October", "2019", "2021");
+        // // Enter Report details
+        // reportsPage.enterReportDetails("January", "October", "2019", "2021");
         
-        // Export report and wait for download
-        reportsPage.clickCSVReport();
-        reportsPage.clickExport();
+        // // Export report and wait for download
+        // reportsPage.clickCSVReport();
+        // reportsPage.clickExport();
 
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        // try {
+        //     Thread.sleep(3000);
+        // } catch (InterruptedException e) {
+        //     e.printStackTrace();
+        // }
 
-        // Close browser
-        app.clickLogOut();
-        testBase.tearDown();
+        // // Close browser
+        // app.clickLogOut();
+        // testBase.tearDown();
 
         // Parse and enter transaction details into excel
         Map<String, List<Transaction>> transactions = parseTransactions(BasePage.config.getProperty("reports.csv.file"));
@@ -70,23 +70,22 @@ public class SharesiesAutomation {
         YahooPortfolioData portfolioData = allPortfolios.clickPortfolio();
         portfolioData.clickHoldingsTab();
 
-        boolean clicked = false;
+        for (String stock : transactions.keySet()) {
+            System.out.println("Entering data for: " + stock);
+            int row = portfolioData.getStockRow(stock);
 
-        for (Transaction t : transactions.get("HLG")) {
-            if (t.getStock().equals("HLG")) {
-                int row = portfolioData.getStockRow("HLG.NZ");
+            if (row == -1) { continue; }
 
-                if (!clicked) { 
-                    portfolioData.clickDropdown(row); 
-                    clicked = true;
-                }
+            boolean clicked = portfolioData.clickDropdown(row);
 
-                String date = t.getTraDate().getDayOfMonth() + "" + t.getTraDate().getMonthValue() + "" + t.getTraDate().getYear();
-                
-                portfolioData.enterTransaction(row, date, t.getQuantity(), t.getPrice(), t.getOrderID());
-                portfolioData.addLot(row);
-                
+            for (Transaction t : transactions.get(stock)) {
+                if (clicked) { portfolioData.addLot(row); }
+                portfolioData.enterTransaction(row, t.getDate(), t.getQuantity(), t.getPrice(), t.getOrderID());  
+                clicked = true; 
             }
+            
+            portfolioData.clickDropdown(row);
+
         }
 
     }
@@ -125,17 +124,17 @@ public class SharesiesAutomation {
                 double amount = Double.parseDouble(values[10]);
                 String method = values[11];
 
+                // Create key - Ensures ticker is compatible with yahoo finance
+                String key = market.equals("NZX") ? stock + ".NZ" : stock; 
+
                 // Add Key if not present
-                if (!result.keySet().contains(stock)) { result.put(stock, new ArrayList<Transaction>()); }
+                if (!result.keySet().contains(key)) { result.put(key, new ArrayList<Transaction>()); }
 
                 Transaction transaction = new Transaction(orderID, tradeDate, stock, market, quantity, price, 
                 transactionType, exchangeRate, fees, currency, amount, method);
 
                 // Add transaction
-                result.get(stock).add(transaction);
-
-                //result.add(new Transaction(orderID, tradeDate, stock, market, quantity, price, 
-                //transactionType, exchangeRate, fees, currency, amount, method));
+                if (result.get(key) != null) { result.get(key).add(transaction); }
             }
 
             buffer.close();

@@ -58,7 +58,7 @@ public final class Transaction {
         return this.orderID;
     }
 
-    public LocalDate getTraDate() {
+    public LocalDate getTradeDate() {
         return this.tradeDate;
     }
 
@@ -100,5 +100,14 @@ public final class Transaction {
 
     public String getTransactionMethod() {
         return this.method;
+    }
+
+    /**
+     * Gets the raw string value of the date in numerical form without any
+     * seperators e.g. the date 12/08/2021 would return 12082021.
+     * @return String
+     */
+    public String getDate() {
+        return this.tradeDate.getDayOfMonth() + "" + this.tradeDate.getMonthValue() + "" + this.tradeDate.getYear();
     }
 }
