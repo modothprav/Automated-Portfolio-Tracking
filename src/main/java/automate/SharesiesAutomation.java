@@ -70,6 +70,7 @@ public class SharesiesAutomation {
         YahooPortfolioData portfolioData = allPortfolios.clickPortfolio();
         portfolioData.clickHoldingsTab();
 
+        // Data entry loop
         for (String stock : transactions.keySet()) {
             System.out.println("Entering data for: " + stock);
             int row = portfolioData.getStockRow(stock);

@@ -95,7 +95,7 @@ public class YahooPortfolioData extends BasePage {
 
         // Check if button clicked and row loaded, if not try again
         try {
-            new WebDriverWait(driver, 1).until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
+            new WebDriverWait(driver, 10).until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
         } catch (Exception e) {
             executor.executeScript("arguments[0].click();", addLotButton);
             new WebDriverWait(driver, 10).until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
@@ -126,6 +126,8 @@ public class YahooPortfolioData extends BasePage {
         By numSharesPath = By.xpath("//table/tbody[" + stockRow + "]/tr[3]/td/table/tbody/tr[last()-1]/td[2]/input[@type='number']");
         WebElement sharesInput = driver.findElement(numSharesPath);
         sharesInput.sendKeys(String.valueOf(shares));
+
+        this.checkEntry(sharesInput, String.valueOf(shares));
         
     }
 
@@ -139,6 +141,8 @@ public class YahooPortfolioData extends BasePage {
         By pricePath = By.xpath("//table/tbody[" + stockRow + "]/tr[3]/td/table/tbody/tr[last()-1]/td[3]/input[@type='number']");
         WebElement priceInput = driver.findElement(pricePath);
         priceInput.sendKeys(String.valueOf(price));
+
+        this.checkEntry(priceInput, String.valueOf(price));
     }
 
     /**
@@ -151,8 +155,19 @@ public class YahooPortfolioData extends BasePage {
         By notesPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()-1]/td[8]/input[@type='text']");
         WebElement notesInput = driver.findElement(notesPath);
         notesInput.sendKeys(notes);
+        this.checkEntry(notesInput, notes);
     }
 
+    private void checkEntry(WebElement inputBox, String text) {
+        try {
+            new WebDriverWait(driver, 4).until(ExpectedConditions.attributeToBe(inputBox, "value", text));
+        } catch (Exception e) {
+            System.out.println("Value not entered");
+            inputBox.clear();
+            inputBox.sendKeys(text);
+            new WebDriverWait(driver, 4).until(ExpectedConditions.attributeToBe(inputBox, "value", text));
+        }
+    }
     /**
      * Enters all the Transactions values for the given Stock. The 
      * values include Date, number of shares, price and notes. These
@@ -169,6 +184,9 @@ public class YahooPortfolioData extends BasePage {
         this.enterShares(stockRow, shares);
         this.enterPrice(stockRow, price);
         this.enterNotes(stockRow, notes);
+
+        By savedIconPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()]/td/span/span[text()='Saved']");
+        new WebDriverWait(driver, 10).until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
     }
 
     /**
