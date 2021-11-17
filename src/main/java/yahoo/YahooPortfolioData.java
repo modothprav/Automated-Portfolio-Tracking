@@ -60,6 +60,7 @@ public class YahooPortfolioData extends BasePage {
         } 
 
         JavascriptExecutor executor = (JavascriptExecutor) driver;
+        executor.executeScript("arguments[0].scrollIntoView();", button);
         executor.executeScript("arguments[0].click();", button);
         //button.click();
         return result;
@@ -127,7 +128,7 @@ public class YahooPortfolioData extends BasePage {
         WebElement sharesInput = driver.findElement(numSharesPath);
         sharesInput.sendKeys(String.valueOf(shares));
 
-        this.checkEntry(sharesInput, String.valueOf(shares));
+        this.checkEntry(sharesInput, String.valueOf(shares), stockRow);
         
     }
 
@@ -142,7 +143,7 @@ public class YahooPortfolioData extends BasePage {
         WebElement priceInput = driver.findElement(pricePath);
         priceInput.sendKeys(String.valueOf(price));
 
-        this.checkEntry(priceInput, String.valueOf(price));
+        this.checkEntry(priceInput, String.valueOf(price), stockRow);
     }
 
     /**
@@ -155,10 +156,10 @@ public class YahooPortfolioData extends BasePage {
         By notesPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()-1]/td[8]/input[@type='text']");
         WebElement notesInput = driver.findElement(notesPath);
         notesInput.sendKeys(notes);
-        this.checkEntry(notesInput, notes);
+        this.checkEntry(notesInput, notes, stockRow);
     }
 
-    private void checkEntry(WebElement inputBox, String text) {
+    private void checkEntry(WebElement inputBox, String text, int stockRow) {
         try {
             new WebDriverWait(driver, 4).until(ExpectedConditions.attributeToBe(inputBox, "value", text));
         } catch (Exception e) {
@@ -167,6 +168,9 @@ public class YahooPortfolioData extends BasePage {
             inputBox.sendKeys(text);
             new WebDriverWait(driver, 4).until(ExpectedConditions.attributeToBe(inputBox, "value", text));
         }
+
+        By savedIconPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()]/td/span/span[text()='Saved']");
+        new WebDriverWait(driver, 10).until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
     }
     /**
      * Enters all the Transactions values for the given Stock. The 
@@ -184,9 +188,6 @@ public class YahooPortfolioData extends BasePage {
         this.enterShares(stockRow, shares);
         this.enterPrice(stockRow, price);
         this.enterNotes(stockRow, notes);
-
-        By savedIconPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()]/td/span/span[text()='Saved']");
-        new WebDriverWait(driver, 10).until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
     }
 
     /**

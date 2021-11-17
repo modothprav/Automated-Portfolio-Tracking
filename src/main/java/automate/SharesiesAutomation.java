@@ -75,7 +75,10 @@ public class SharesiesAutomation {
             System.out.println("Entering data for: " + stock);
             int row = portfolioData.getStockRow(stock);
 
-            if (row == -1) { continue; }
+            if (row == -1) { 
+                System.out.println(stock + " Not found");
+                continue; 
+            }
 
             boolean clicked = portfolioData.clickDropdown(row);
 
