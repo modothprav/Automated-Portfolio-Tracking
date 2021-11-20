@@ -19,13 +19,6 @@ public class YahooPortfolioData extends BasePage {
     @FindBy(xpath = "//span[text()='My holdings']")
     private WebElement holdingsTab;
 
-    // @FindAll({@FindBy(xpath = "//table/tbody[*]/tr[2]/td/button")})
-    // private List<WebElement> dropdownButtons;
-    
-    // @FindAll({@FindBy(xpath = "//table/tbody[*]/tr[2]/td[2]/div/a")})
-    // private List<WebElement> stockTickers;
-
-
     /**
      * Constructor
      */
@@ -39,6 +32,10 @@ public class YahooPortfolioData extends BasePage {
      */
     public void clickHoldingsTab() {
         this.holdingsTab.click();
+
+        // Check if holdings page is loaded
+        By checkHoldingPath = By.xpath("//div[@id='Lead-3-Portfolios-Proxy']");
+        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOfElementLocated(checkHoldingPath));
     }
 
     /**
@@ -62,7 +59,7 @@ public class YahooPortfolioData extends BasePage {
         JavascriptExecutor executor = (JavascriptExecutor) driver;
         executor.executeScript("arguments[0].scrollIntoView();", button);
         executor.executeScript("arguments[0].click();", button);
-        //button.click();
+
         return result;
     }
 
@@ -91,8 +88,6 @@ public class YahooPortfolioData extends BasePage {
 
         JavascriptExecutor executor = (JavascriptExecutor) driver;
         executor.executeScript("arguments[0].click();", addLotButton);
-        
-        //addLotButton.click();
 
         // Check if button clicked and row loaded, if not try again
         try {

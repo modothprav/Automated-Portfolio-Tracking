@@ -25,33 +25,33 @@ public class SharesiesAutomation {
     public static void main(String[] args) {
         // Initialize base page and config properties
         BasePage testBase = new BasePage();
-        // testBase.initialize("url.sharesies");
+        testBase.initialize("url.sharesies");
 
-        // // Navigate to login page and Log in as user
-        // SharesiesHome homePage = new SharesiesHome();
-        // SharesiesLogIn loginPage = homePage.clickLoginButton();
-        // SharesiesApp app = loginPage.logIn();
+        // Navigate to login page and Log in as user
+        SharesiesHome homePage = new SharesiesHome();
+        SharesiesLogIn loginPage = homePage.clickLoginButton();
+        SharesiesApp app = loginPage.logIn();
         
-        // // Navigate to reports page
-        // SharesiesSettings settingsPage = app.clickSettings();
-        // SharesiesReports reportsPage = settingsPage.clickReports();
+        // Navigate to reports page
+        SharesiesSettings settingsPage = app.clickSettings();
+        SharesiesReports reportsPage = settingsPage.clickReports();
         
-        // // Enter Report details
-        // reportsPage.enterReportDetails("January", "October", "2019", "2021");
+        // Enter Report details
+        reportsPage.enterReportDetails("January", "October", "2019", "2021");
         
-        // // Export report and wait for download
-        // reportsPage.clickCSVReport();
-        // reportsPage.clickExport();
+        // Export report and wait for download
+        reportsPage.clickCSVReport();
+        reportsPage.clickExport();
 
-        // try {
-        //     Thread.sleep(3000);
-        // } catch (InterruptedException e) {
-        //     e.printStackTrace();
-        // }
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        // // Close browser
-        // app.clickLogOut();
-        // testBase.tearDown();
+        // Close browser
+        app.clickLogOut();
+        testBase.tearDown();
 
         // Parse and enter transaction details into excel
         Map<String, List<Transaction>> transactions = parseTransactions(BasePage.config.getProperty("reports.csv.file"));
