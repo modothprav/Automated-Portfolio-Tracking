@@ -1,9 +1,10 @@
 package yahoo;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
-import org.apache.poi.util.SystemOutLogger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -18,13 +19,6 @@ public class YahooPortfolioData extends BasePage {
     @FindBy(xpath = "//span[text()='My holdings']")
     private WebElement holdingsTab;
 
-    // @FindAll({@FindBy(xpath = "//table/tbody[*]/tr[2]/td/button")})
-    // private List<WebElement> dropdownButtons;
-    
-    // @FindAll({@FindBy(xpath = "//table/tbody[*]/tr[2]/td[2]/div/a")})
-    // private List<WebElement> stockTickers;
-
-
     /**
      * Constructor
      */
@@ -38,16 +32,35 @@ public class YahooPortfolioData extends BasePage {
      */
     public void clickHoldingsTab() {
         this.holdingsTab.click();
+
+        // Check if holdings page is loaded
+        By checkHoldingPath = By.xpath("//div[@id='Lead-3-Portfolios-Proxy']");
+        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOfElementLocated(checkHoldingPath));
     }
 
     /**
      * Clicks the dropdown button to view all individual
-     * transactions for the current stock.
+     * transactions for the current stock and returns true. If its the first transaction
+     * to be entered for the stock, then the add lot button will be cliked
+     * within the row hence performing a dropdown and a false value will be returned. 
      * @param stockRow int Row number of Stock to view transactions for
+     * @return boolean True if the dropdown button is clicked false otherwise.
      */
-    public void clickDropdown(int stockRow) {
-        WebElement button = driver.findElement(By.xpath("//table/tbody["+ stockRow +"]/tr[2]/td/button"));
-        button.click();
+    public boolean clickDropdown(int stockRow) {
+        WebElement button;
+        boolean result = true;
+        try {
+            button = driver.findElement(By.xpath("//table/tbody["+ stockRow +"]/tr[2]/td/button"));
+        } catch (NoSuchElementException e) {
+            result = false;
+            button = driver.findElement(By.xpath("//table/tbody[" + stockRow + "]/tr[2]/td[9]/button"));
+        } 
+
+        JavascriptExecutor executor = (JavascriptExecutor) driver;
+        executor.executeScript("arguments[0].scrollIntoView();", button);
+        executor.executeScript("arguments[0].click();", button);
+
+        return result;
     }
 
     /**
@@ -55,7 +68,7 @@ public class YahooPortfolioData extends BasePage {
      * @return List<WebElement> A list of WebElement objects
      */
     public List<WebElement> getStockHoldings() {
-        return driver.findElements(By.xpath("//table/tbody/*"));
+        return driver.findElements(By.xpath("//table/tbody[*]"));
     }
 
     /**
@@ -72,10 +85,18 @@ public class YahooPortfolioData extends BasePage {
         // Add new transaction row
         int count = driver.findElements(transactions).size();
         WebElement addLotButton = driver.findElement(buttonPath);
-        addLotButton.click();
 
-        // Wait until new element row is loaded
-        new WebDriverWait(driver, 8).until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
+        JavascriptExecutor executor = (JavascriptExecutor) driver;
+        executor.executeScript("arguments[0].click();", addLotButton);
+
+        // Check if button clicked and row loaded, if not try again
+        try {
+            new WebDriverWait(driver, 10).until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
+        } catch (Exception e) {
+            executor.executeScript("arguments[0].click();", addLotButton);
+            new WebDriverWait(driver, 10).until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
+        }
+        
     }
 
     /**
@@ -97,10 +118,13 @@ public class YahooPortfolioData extends BasePage {
      * @param stockRow int The Row number of the stock to enter the transaction value for.
      * @param shares int The numner of shares
      */
-    private void enterShares(int stockRow, int shares) {
+    private void enterShares(int stockRow, double shares) {
         By numSharesPath = By.xpath("//table/tbody[" + stockRow + "]/tr[3]/td/table/tbody/tr[last()-1]/td[2]/input[@type='number']");
         WebElement sharesInput = driver.findElement(numSharesPath);
         sharesInput.sendKeys(String.valueOf(shares));
+
+        this.checkEntry(sharesInput, String.valueOf(shares), stockRow);
+        
     }
 
     /**
@@ -109,10 +133,12 @@ public class YahooPortfolioData extends BasePage {
      * @param stockRow int The Row number of the stock to enter the transaction value for.
      * @param price int The Price of a single share.
      */
-    private void enterPrice(int stockRow, int price) {
+    private void enterPrice(int stockRow, double price) {
         By pricePath = By.xpath("//table/tbody[" + stockRow + "]/tr[3]/td/table/tbody/tr[last()-1]/td[3]/input[@type='number']");
         WebElement priceInput = driver.findElement(pricePath);
         priceInput.sendKeys(String.valueOf(price));
+
+        this.checkEntry(priceInput, String.valueOf(price), stockRow);
     }
 
     /**
@@ -125,8 +151,22 @@ public class YahooPortfolioData extends BasePage {
         By notesPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()-1]/td[8]/input[@type='text']");
         WebElement notesInput = driver.findElement(notesPath);
         notesInput.sendKeys(notes);
+        this.checkEntry(notesInput, notes, stockRow);
     }
 
+    private void checkEntry(WebElement inputBox, String text, int stockRow) {
+        try {
+            new WebDriverWait(driver, 4).until(ExpectedConditions.attributeToBe(inputBox, "value", text));
+        } catch (Exception e) {
+            System.out.println("Value not entered");
+            inputBox.clear();
+            inputBox.sendKeys(text);
+            new WebDriverWait(driver, 4).until(ExpectedConditions.attributeToBe(inputBox, "value", text));
+        }
+
+        By savedIconPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()]/td/span/span[text()='Saved']");
+        new WebDriverWait(driver, 10).until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
+    }
     /**
      * Enters all the Transactions values for the given Stock. The 
      * values include Date, number of shares, price and notes. These
@@ -138,7 +178,7 @@ public class YahooPortfolioData extends BasePage {
      * @param price int The Price of a single share.
      * @param notes String any Notes to add on the current transaction
      */
-    public void enterTransaction(int stockRow, String date, int shares, int price, String notes) {
+    public void enterTransaction(int stockRow, String date, double shares, double price, String notes) {
         this.enterDate(stockRow, date);
         this.enterShares(stockRow, shares);
         this.enterPrice(stockRow, price);
@@ -164,6 +204,7 @@ public class YahooPortfolioData extends BasePage {
      */
     public int getStockRow(String name) {
         List<WebElement> stocks = this.getStockHoldings();
+
         for (int i = 1; i < stocks.size() + 1; i++) {
             By namePath = By.xpath("//table/tbody["+ i +"]/tr[2]/td[2]/div/a");
             String stockName = driver.findElement(namePath).getText();

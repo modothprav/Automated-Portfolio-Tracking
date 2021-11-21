@@ -63,7 +63,7 @@ public class ExcelDataEntry {
                         cell.setCellValue(t.getOrderID());
                         break;
                     case 1:
-                        cell.setCellValue(t.getTraDate().toString());
+                        cell.setCellValue(t.getTradeDate().toString());
                         break;
                     case 2: 
                         cell.setCellValue(t.getStock());

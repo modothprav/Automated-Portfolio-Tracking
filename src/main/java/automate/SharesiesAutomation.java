@@ -5,9 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import org.openqa.selenium.WebElement;
+import java.util.Map;
 
 import base.BasePage;
 import sharesies.SharesiesApp;
@@ -37,7 +37,7 @@ public class SharesiesAutomation {
         SharesiesReports reportsPage = settingsPage.clickReports();
         
         // Enter Report details
-        reportsPage.enterReportDetails("April", "October", "2020", "2021");
+        reportsPage.enterReportDetails("January", "October", "2019", "2021");
         
         // Export report and wait for download
         reportsPage.clickCSVReport();
@@ -54,30 +54,57 @@ public class SharesiesAutomation {
         testBase.tearDown();
 
         // Parse and enter transaction details into excel
-        List<Transaction> transactions = parseTransactions(BasePage.config.getProperty("reports.csv.file"));
+        Map<String, List<Transaction>> transactions = parseTransactions(BasePage.config.getProperty("reports.csv.file"));
 
         testBase.initialize("url.yahoo.finance");
         
+        // Log into Yahoo account
         YahooLogin yahooLogin = new YahooLogin();
         YahooHome yahooHome = yahooLogin.login();
 
+        // Navigate to portfolio page
         YahooFinance yahooFinance = yahooHome.goToYahooFinance();
         YahooPortfolios allPortfolios = yahooFinance.goToPortfolioPage();
+        
+        // Navigate to Portfolio data tab with all transactions 
         YahooPortfolioData portfolioData = allPortfolios.clickPortfolio();
         portfolioData.clickHoldingsTab();
-        System.out.println(portfolioData.getStockRow("AIA.NZ"));
+
+        // Data entry loop
+        for (String stock : transactions.keySet()) {
+            System.out.println("Entering data for: " + stock);
+            int row = portfolioData.getStockRow(stock);
+
+            if (row == -1) { 
+                System.out.println(stock + " Not found");
+                continue; 
+            }
+
+            boolean clicked = portfolioData.clickDropdown(row);
+
+            for (Transaction t : transactions.get(stock)) {
+                if (clicked) { portfolioData.addLot(row); }
+                portfolioData.enterTransaction(row, t.getDate(), t.getQuantity(), t.getPrice(), t.getOrderID());  
+                clicked = true; 
+            }
+            
+            portfolioData.clickDropdown(row);
+
+        }
+
     }
 
     /**
      * Read the CSV Transaction report downloaded from Sharesies. Save the 
      * information in the report by creating Transaction objects, these objects
-     * will be returned in the form of a list.
+     * will be returned in the form of a Map with the stock as the key and its
+     * value being a list of transactions regarding that stock.
      * 
      * @param filePath The file path of the CSV Transaction report
-     * @return A List of Transaction objects
+     * @return Map<String, List<Transaction>>
      */
-    private static List<Transaction> parseTransactions(String filePath) {
-        List<Transaction> result = new ArrayList<>();
+    private static Map<String, List<Transaction>> parseTransactions(String filePath) {
+        Map<String, List<Transaction>> result = new HashMap<>();
 
         try {
             BufferedReader buffer = new BufferedReader(new FileReader(filePath));
@@ -101,8 +128,17 @@ public class SharesiesAutomation {
                 double amount = Double.parseDouble(values[10]);
                 String method = values[11];
 
-                result.add(new Transaction(orderID, tradeDate, stock, market, quantity, price, 
-                transactionType, exchangeRate, fees, currency, amount, method));
+                // Create key - Ensures ticker is compatible with yahoo finance
+                String key = market.equals("NZX") ? stock + ".NZ" : stock; 
+
+                // Add Key if not present
+                if (!result.keySet().contains(key)) { result.put(key, new ArrayList<Transaction>()); }
+
+                Transaction transaction = new Transaction(orderID, tradeDate, stock, market, quantity, price, 
+                transactionType, exchangeRate, fees, currency, amount, method);
+
+                // Add transaction
+                if (result.get(key) != null) { result.get(key).add(transaction); }
             }
 
             buffer.close();
