@@ -12,7 +12,7 @@ import base.BasePage;
 public class SharesiesHome extends BasePage {
 
     // Object Repository
-    @FindBy(xpath = "//li[@class='Header_login__2-KYI']")
+    @FindBy(xpath = "//ul[contains(@class, 'Header_appList')]/li[contains(@class, 'Header_login')]")
     private WebElement loginButton;
 
     /**
