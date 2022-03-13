@@ -7,6 +7,8 @@ import java.util.Properties;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import base.BasePage;
 
@@ -92,6 +94,7 @@ public class YahooLogin extends BasePage {
         this.enterPassword(credentials.getProperty("yahoo.password"));
         this.clickNextButton();
 
+        new WebDriverWait(driver, 8).until(ExpectedConditions.titleIs("Yahoo New Zealand"));
         return new YahooHome();
     }
     
