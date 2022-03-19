@@ -1,7 +1,6 @@
 package yahoo;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -13,6 +12,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.NoSuchElementException;
 
 import base.BasePage;
 
@@ -45,15 +45,15 @@ public class YahooPortfolioData extends BasePage {
      * Clicks the dropdown button to view all individual
      * transactions for the current stock and returns true. If its the first transaction
      * to be entered for the stock, then the add lot button will be cliked
-     * within the row hence performing a dropdown and a false value will be returned. 
-     * @param stockRow int Row number of Stock to view transactions for
+     * within the row hence performing a dropdown action and a false value will be returned. 
+     * @param stockRow int Row number of the Stock to view transactions for
      * @return boolean True if the dropdown button is clicked false otherwise.
      */
     public boolean clickDropdown(int stockRow) {
         WebElement button;
         boolean result = true;
         try {
-            button = driver.findElement(By.xpath("//table/tbody["+ stockRow +"]/tr[2]/td/button"));
+            button = driver.findElement(By.xpath("//table/tbody["+ stockRow +"]/tr[2]/td[1]/button"));
         } catch (NoSuchElementException e) {
             result = false;
             button = driver.findElement(By.xpath("//table/tbody[" + stockRow + "]/tr[2]/td[9]/button"));
@@ -104,7 +104,8 @@ public class YahooPortfolioData extends BasePage {
 
     /**
      * Enters the transaction date for a stock. The transaction date is 
-     * entered in the final transaction row of a stock.
+     * entered in the final transaction row of a stock. Also checks if the date 
+     * value has been entered correctly.
      * @param stockRow int The Row number of the stock to enter the transaction value for
      * @param date LocalDate The LocalDate object 
      */
@@ -116,7 +117,21 @@ public class YahooPortfolioData extends BasePage {
         dateInput.sendKeys(value + Keys.TAB);
 
         // The date value is saved in a different format
-        this.checkEntry(dateInput, date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), stockRow);
+        String savedValue = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        // Check if the value has been entered in the specified field, if not then enter again
+        try {
+            new WebDriverWait(driver, 4).until(ExpectedConditions.attributeToBe(dateInput, "value", savedValue));
+        } catch (Exception e) {
+            System.out.println("Value not entered");
+            dateInput.clear();
+            dateInput.sendKeys(value + Keys.TAB);
+            new WebDriverWait(driver, 4).until(ExpectedConditions.attributeToBe(dateInput, "value", savedValue));
+        }
+
+        // Wait for the entered values to be saved
+        By savedIconPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()]/td/span/span[text()='Saved']");
+        new WebDriverWait(driver, 15).until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
     }
 
     /**
