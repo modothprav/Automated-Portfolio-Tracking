@@ -1,15 +1,18 @@
 package yahoo;
 
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.NoSuchElementException;
 
 import base.BasePage;
 
@@ -42,15 +45,15 @@ public class YahooPortfolioData extends BasePage {
      * Clicks the dropdown button to view all individual
      * transactions for the current stock and returns true. If its the first transaction
      * to be entered for the stock, then the add lot button will be cliked
-     * within the row hence performing a dropdown and a false value will be returned. 
-     * @param stockRow int Row number of Stock to view transactions for
+     * within the row hence performing a dropdown action and a false value will be returned. 
+     * @param stockRow int Row number of the Stock to view transactions for
      * @return boolean True if the dropdown button is clicked false otherwise.
      */
     public boolean clickDropdown(int stockRow) {
         WebElement button;
         boolean result = true;
         try {
-            button = driver.findElement(By.xpath("//table/tbody["+ stockRow +"]/tr[2]/td/button"));
+            button = driver.findElement(By.xpath("//table/tbody["+ stockRow +"]/tr[2]/td[1]/button"));
         } catch (NoSuchElementException e) {
             result = false;
             button = driver.findElement(By.xpath("//table/tbody[" + stockRow + "]/tr[2]/td[9]/button"));
@@ -101,15 +104,38 @@ public class YahooPortfolioData extends BasePage {
 
     /**
      * Enters the transaction date for a stock. The transaction date is 
-     * entered in the final transaction row of a stock.
+     * entered in the final transaction row of a stock. Also checks if the date 
+     * value has been entered correctly.
      * @param stockRow int The Row number of the stock to enter the transaction value for
-     * @param date String The raw value of the date to be entered without seperators 
-     * e.g. 121020 is 12/10/20
+     * @param date LocalDate The LocalDate object 
      */
-    private void enterDate(int stockRow, String date) {
+    private void enterDate(int stockRow, LocalDate date) {
         By dateInputPath = By.xpath("//table/tbody[" + stockRow + "]/tr[3]/td/table/tbody/tr[last()-1]/td[1]/input[@type='date']");
         WebElement dateInput = driver.findElement(dateInputPath);
-        dateInput.sendKeys(date);
+
+        String value = date.format(DateTimeFormatter.ofPattern("ddMMyyyy"));
+        dateInput.sendKeys(value);
+        dateInput.sendKeys(Keys.TAB);
+
+        // The date value is saved in a different format
+        String savedValue = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        By savedIconPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()]/td/span/span[text()='Saved']");
+        new WebDriverWait(driver, 15).until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
+
+        // Check if the value has been entered in the specified field, if not then enter again
+        try {
+            new WebDriverWait(driver, 4).until(ExpectedConditions.attributeToBe(dateInput, "value", savedValue));
+        } catch (Exception e) {
+            System.out.println("Value not entered");
+            dateInput.clear();
+            dateInput.sendKeys(value);
+            dateInput.sendKeys(Keys.TAB);
+
+            // Wait for the entered values to be saved, then check again
+            new WebDriverWait(driver, 15).until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
+            new WebDriverWait(driver, 4).until(ExpectedConditions.attributeToBe(dateInput, "value", savedValue));
+        }
     }
 
     /**
@@ -151,9 +177,19 @@ public class YahooPortfolioData extends BasePage {
         By notesPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()-1]/td[8]/input[@type='text']");
         WebElement notesInput = driver.findElement(notesPath);
         notesInput.sendKeys(notes);
+        notesInput.sendKeys(Keys.SHIFT, Keys.TAB);
         this.checkEntry(notesInput, notes, stockRow);
     }
 
+    /**
+     * Checks whether if the given text has been entered into the given input element.
+     * If the value in the input box doesn't match with the given text then the method
+     * will try to enter in the text again. Finally will perform one last check 
+     * and wait for the saved Icon to appear below the transaction row, before proceeding. 
+     * @param inputBox WebElement The element being checked for
+     * @param text String The text to be checked.
+     * @param stockRow int The Row number of the stock for which the transaction value is entered.
+     */
     private void checkEntry(WebElement inputBox, String text, int stockRow) {
         try {
             new WebDriverWait(driver, 4).until(ExpectedConditions.attributeToBe(inputBox, "value", text));
@@ -165,7 +201,7 @@ public class YahooPortfolioData extends BasePage {
         }
 
         By savedIconPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()]/td/span/span[text()='Saved']");
-        new WebDriverWait(driver, 10).until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
+        new WebDriverWait(driver, 15).until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
     }
     /**
      * Enters all the Transactions values for the given Stock. The 
@@ -178,7 +214,7 @@ public class YahooPortfolioData extends BasePage {
      * @param price int The Price of a single share.
      * @param notes String any Notes to add on the current transaction
      */
-    public void enterTransaction(int stockRow, String date, double shares, double price, String notes) {
+    public void enterTransaction(int stockRow, LocalDate date, double shares, double price, String notes) {
         this.enterDate(stockRow, date);
         this.enterShares(stockRow, shares);
         this.enterPrice(stockRow, price);
