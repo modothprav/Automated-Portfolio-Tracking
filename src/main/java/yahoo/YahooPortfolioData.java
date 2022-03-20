@@ -114,10 +114,14 @@ public class YahooPortfolioData extends BasePage {
         WebElement dateInput = driver.findElement(dateInputPath);
 
         String value = date.format(DateTimeFormatter.ofPattern("ddMMyyyy"));
-        dateInput.sendKeys(value + Keys.TAB);
+        dateInput.sendKeys(value);
+        dateInput.sendKeys(Keys.TAB);
 
         // The date value is saved in a different format
         String savedValue = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        By savedIconPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()]/td/span/span[text()='Saved']");
+        new WebDriverWait(driver, 15).until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
 
         // Check if the value has been entered in the specified field, if not then enter again
         try {
@@ -125,13 +129,13 @@ public class YahooPortfolioData extends BasePage {
         } catch (Exception e) {
             System.out.println("Value not entered");
             dateInput.clear();
-            dateInput.sendKeys(value + Keys.TAB);
+            dateInput.sendKeys(value);
+            dateInput.sendKeys(Keys.TAB);
+
+            // Wait for the entered values to be saved, then check again
+            new WebDriverWait(driver, 15).until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
             new WebDriverWait(driver, 4).until(ExpectedConditions.attributeToBe(dateInput, "value", savedValue));
         }
-
-        // Wait for the entered values to be saved
-        By savedIconPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()]/td/span/span[text()='Saved']");
-        new WebDriverWait(driver, 15).until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
     }
 
     /**
@@ -173,6 +177,7 @@ public class YahooPortfolioData extends BasePage {
         By notesPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()-1]/td[8]/input[@type='text']");
         WebElement notesInput = driver.findElement(notesPath);
         notesInput.sendKeys(notes);
+        notesInput.sendKeys(Keys.SHIFT, Keys.TAB);
         this.checkEntry(notesInput, notes, stockRow);
     }
 
