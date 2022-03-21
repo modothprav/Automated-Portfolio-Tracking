@@ -2,6 +2,7 @@ package automate;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public final class Transaction {
     private final String orderID;
@@ -37,7 +38,13 @@ public final class Transaction {
                         double quantity, double price, String transactionType, double exchangeRate, 
                         double fees, String currency, double amount, String method) {
         this.orderID = orderID;
-        this.tradeDate = LocalDate.parse(tradeDate, DateTimeFormatter.ofPattern("yyyy-MM-d"));
+        LocalDate date;
+        try {
+            date = LocalDate.parse(tradeDate, DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss (z)"));
+        } catch (DateTimeParseException e) {
+            date = LocalDate.parse(tradeDate.split(" ")[0], DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        }
+        this.tradeDate = date;
         this.stock = stock;
         this.market = market;
         this.quantity = quantity;
