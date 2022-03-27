@@ -85,19 +85,23 @@ public class YahooPortfolioData extends BasePage {
         By transactions = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/*");
         By buttonPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()]/td/button");
 
-        // Add new transaction row
+        // Locate Web Elements
         int count = driver.findElements(transactions).size();
         WebElement addLotButton = driver.findElement(buttonPath);
+        By newRowPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr["+ count +"]");
 
+        // Add new transaction row
         JavascriptExecutor executor = (JavascriptExecutor) driver;
         executor.executeScript("arguments[0].click();", addLotButton);
 
         // Check if button clicked and row loaded, if not try again
         try {
             new WebDriverWait(driver, 10).until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
+            new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOfElementLocated(newRowPath));
         } catch (Exception e) {
             executor.executeScript("arguments[0].click();", addLotButton);
             new WebDriverWait(driver, 10).until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
+            new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOfElementLocated(newRowPath));
         }
         
     }
