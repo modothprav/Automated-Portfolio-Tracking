@@ -195,17 +195,19 @@ public class YahooPortfolioData extends BasePage {
      * @param stockRow int The Row number of the stock for which the transaction value is entered.
      */
     private void checkEntry(WebElement inputBox, String text, int stockRow) {
+        By savedIconPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()]/td/span/span[text()='Saved']");
+
         try {
+            new WebDriverWait(driver, 15).until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
             new WebDriverWait(driver, 4).until(ExpectedConditions.attributeToBe(inputBox, "value", text));
         } catch (Exception e) {
             System.out.println("Value not entered");
             inputBox.clear();
             inputBox.sendKeys(text);
+            
+            new WebDriverWait(driver, 15).until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
             new WebDriverWait(driver, 4).until(ExpectedConditions.attributeToBe(inputBox, "value", text));
         }
-
-        By savedIconPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()]/td/span/span[text()='Saved']");
-        new WebDriverWait(driver, 15).until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
     }
     /**
      * Enters all the Transactions values for the given Stock. The 
