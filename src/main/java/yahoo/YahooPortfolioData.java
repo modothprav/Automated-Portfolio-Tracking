@@ -153,7 +153,7 @@ public class YahooPortfolioData extends BasePage {
         WebElement sharesInput = driver.findElement(numSharesPath);
         sharesInput.sendKeys(String.valueOf(shares));
 
-        this.checkEntry(sharesInput, String.valueOf(shares), stockRow);
+        this.checkEntry(numSharesPath, String.valueOf(shares), stockRow);
         
     }
 
@@ -168,7 +168,7 @@ public class YahooPortfolioData extends BasePage {
         WebElement priceInput = driver.findElement(pricePath);
         priceInput.sendKeys(String.valueOf(price));
 
-        this.checkEntry(priceInput, String.valueOf(price), stockRow);
+        this.checkEntry(pricePath, String.valueOf(price), stockRow);
     }
 
     /**
@@ -182,7 +182,7 @@ public class YahooPortfolioData extends BasePage {
         WebElement notesInput = driver.findElement(notesPath);
         notesInput.sendKeys(notes);
         notesInput.sendKeys(Keys.SHIFT, Keys.TAB);
-        this.checkEntry(notesInput, notes, stockRow);
+        this.checkEntry(notesPath, notes, stockRow);
     }
 
     /**
@@ -194,14 +194,16 @@ public class YahooPortfolioData extends BasePage {
      * @param text String The text to be checked.
      * @param stockRow int The Row number of the stock for which the transaction value is entered.
      */
-    private void checkEntry(WebElement inputBox, String text, int stockRow) {
+    private void checkEntry(By inputPath, String text, int stockRow) {
         By savedIconPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()]/td/span/span[text()='Saved']");
 
         try {
+            WebElement inputBox = driver.findElement(inputPath);
             new WebDriverWait(driver, 15).until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
             new WebDriverWait(driver, 4).until(ExpectedConditions.attributeToBe(inputBox, "value", text));
         } catch (Exception e) {
             System.out.println("Value not entered");
+            WebElement inputBox = driver.findElement(inputPath);
             inputBox.clear();
             inputBox.sendKeys(text);
             
