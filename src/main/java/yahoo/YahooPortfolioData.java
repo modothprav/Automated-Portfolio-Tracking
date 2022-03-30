@@ -95,13 +95,17 @@ public class YahooPortfolioData extends BasePage {
         executor.executeScript("arguments[0].click();", addLotButton);
 
         // Check if button clicked and row loaded, if not try again
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+
         try {
-            new WebDriverWait(driver, 10).until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
-            new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOfElementLocated(newRowPath));
+            wait.until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(newRowPath));
         } catch (Exception e) {
-            executor.executeScript("arguments[0].click();", addLotButton);
-            new WebDriverWait(driver, 10).until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
-            new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOfElementLocated(newRowPath));
+            if (driver.findElements(transactions).size() <= count) {
+                executor.executeScript("arguments[0].click();", addLotButton);
+                wait.until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
+            }
+            wait.until(ExpectedConditions.visibilityOfElementLocated(newRowPath));
         }
         
     }
