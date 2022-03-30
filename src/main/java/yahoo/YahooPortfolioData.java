@@ -85,19 +85,27 @@ public class YahooPortfolioData extends BasePage {
         By transactions = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/*");
         By buttonPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()]/td/button");
 
-        // Add new transaction row
+        // Locate Web Elements
         int count = driver.findElements(transactions).size();
         WebElement addLotButton = driver.findElement(buttonPath);
+        By newRowPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr["+ count +"]");
 
+        // Add new transaction row
         JavascriptExecutor executor = (JavascriptExecutor) driver;
         executor.executeScript("arguments[0].click();", addLotButton);
 
         // Check if button clicked and row loaded, if not try again
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+
         try {
-            new WebDriverWait(driver, 10).until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
+            wait.until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(newRowPath));
         } catch (Exception e) {
-            executor.executeScript("arguments[0].click();", addLotButton);
-            new WebDriverWait(driver, 10).until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
+            if (driver.findElements(transactions).size() <= count) {
+                executor.executeScript("arguments[0].click();", addLotButton);
+                wait.until(ExpectedConditions.numberOfElementsToBe(transactions, count + 1));
+            }
+            wait.until(ExpectedConditions.visibilityOfElementLocated(newRowPath));
         }
         
     }
@@ -149,7 +157,7 @@ public class YahooPortfolioData extends BasePage {
         WebElement sharesInput = driver.findElement(numSharesPath);
         sharesInput.sendKeys(String.valueOf(shares));
 
-        this.checkEntry(sharesInput, String.valueOf(shares), stockRow);
+        this.checkEntry(numSharesPath, String.valueOf(shares), stockRow);
         
     }
 
@@ -164,7 +172,7 @@ public class YahooPortfolioData extends BasePage {
         WebElement priceInput = driver.findElement(pricePath);
         priceInput.sendKeys(String.valueOf(price));
 
-        this.checkEntry(priceInput, String.valueOf(price), stockRow);
+        this.checkEntry(pricePath, String.valueOf(price), stockRow);
     }
 
     /**
@@ -178,7 +186,7 @@ public class YahooPortfolioData extends BasePage {
         WebElement notesInput = driver.findElement(notesPath);
         notesInput.sendKeys(notes);
         notesInput.sendKeys(Keys.SHIFT, Keys.TAB);
-        this.checkEntry(notesInput, notes, stockRow);
+        this.checkEntry(notesPath, notes, stockRow);
     }
 
     /**
@@ -190,18 +198,22 @@ public class YahooPortfolioData extends BasePage {
      * @param text String The text to be checked.
      * @param stockRow int The Row number of the stock for which the transaction value is entered.
      */
-    private void checkEntry(WebElement inputBox, String text, int stockRow) {
+    private void checkEntry(By inputPath, String text, int stockRow) {
+        By savedIconPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()]/td/span/span[text()='Saved']");
+
         try {
+            WebElement inputBox = driver.findElement(inputPath);
+            new WebDriverWait(driver, 15).until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
             new WebDriverWait(driver, 4).until(ExpectedConditions.attributeToBe(inputBox, "value", text));
         } catch (Exception e) {
             System.out.println("Value not entered");
+            WebElement inputBox = driver.findElement(inputPath);
             inputBox.clear();
             inputBox.sendKeys(text);
+            
+            new WebDriverWait(driver, 15).until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
             new WebDriverWait(driver, 4).until(ExpectedConditions.attributeToBe(inputBox, "value", text));
         }
-
-        By savedIconPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()]/td/span/span[text()='Saved']");
-        new WebDriverWait(driver, 15).until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
     }
     /**
      * Enters all the Transactions values for the given Stock. The 
