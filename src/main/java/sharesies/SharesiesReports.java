@@ -123,26 +123,39 @@ public class SharesiesReports extends BasePage {
     }
 
     /**
+     * Using the helper methods enters the given time period values in
+     * their designated fields on the web page. Then clicks the 'CSV Report'
+     * option. Finally after all the required information is selected, the
+     * export button is cliked. Once the button is clicked the WebDriver will
+     * wait until it can confirm the file is downloaded in the path specifed
+     * in the config.
      * 
-     * @param fromMonth
-     * @param toMonth
-     * @param fromYear
-     * @param toYear
+     * @param fromMonth String The starting month e.g. "January"
+     * @param toMonth String The ending month e.g. "October"
+     * @param fromYear String The starting year e.g. "2021"
+     * @param toYear String The ending year e.g. "2000"
      */
     public void downloadCSVReport(String fromMonth, String toMonth, String fromYear, String toYear) {
+        // Enter and select required details
         this.enterReportDetails(fromMonth, toMonth, fromYear, toYear);
         this.clickCSVReport();
         this.clickExport();
 
+        // Extract file name and folder path from the absolute file path
         String filePath = BasePage.config.getProperty("reports.csv.file");
         String fileName = filePath.split("/")[filePath.split("/").length - 1];
         String folderPath = filePath.replace(fileName, "");
 
-        System.out.println(folderPath);
-
         new WebDriverWait(driver, 5).until(new FileDownloaded(folderPath, fileName));
     }
 
+    /**
+     * A helper calls whcih allows the creation of a custom ExpectedContiion
+     * that can be used to prompt the WebDriver to wait until our custom
+     * contition has been met. In this case the custom condition checks
+     * whether our given file is present in the given folder and will return
+     * true if present or false otherwise.
+     */
     private class FileDownloaded implements ExpectedCondition {
 
         private String folderPath;
@@ -161,7 +174,6 @@ public class SharesiesReports extends BasePage {
             for (int i = 0; i < dirContents.length; i++) {
                 if (dirContents[i].getName().equals(this.filename)) {
                     // File has been found
-                    System.out.println("File Found");
                     return true;
                 }
             }
