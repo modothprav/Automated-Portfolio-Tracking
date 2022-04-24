@@ -1,9 +1,13 @@
 package sharesies;
 
+import java.io.File;
+
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import base.BasePage;
 
@@ -95,7 +99,7 @@ public class SharesiesReports extends BasePage {
      * @param fromYear String The starting year e.g. "2021"
      * @param toYear String The ending year e.g. "2000"
      */
-    public void enterReportDetails(String fromMonth, String toMonth, String fromYear, String toYear) {
+    private void enterReportDetails(String fromMonth, String toMonth, String fromYear, String toYear) {
         this.selectFromMonth(fromMonth);
         this.selectToMonth(toMonth);
         this.selectFromYear(fromYear);
@@ -105,7 +109,7 @@ public class SharesiesReports extends BasePage {
     /**
      * Click the CSV Report export type on the reports page 
      */
-    public void clickCSVReport() {
+    private void clickCSVReport() {
         this.csvReport.click();
     }
 
@@ -114,7 +118,55 @@ public class SharesiesReports extends BasePage {
      * entered the export button can be clicked to export the 
      * requested report type within the given period. 
      */
-    public void clickExport() {
+    private void clickExport() {
         this.exportButton.click();
+    }
+
+    /**
+     * 
+     * @param fromMonth
+     * @param toMonth
+     * @param fromYear
+     * @param toYear
+     */
+    public void downloadCSVReport(String fromMonth, String toMonth, String fromYear, String toYear) {
+        this.enterReportDetails(fromMonth, toMonth, fromYear, toYear);
+        this.clickCSVReport();
+        this.clickExport();
+
+        String filePath = BasePage.config.getProperty("reports.csv.file");
+        String fileName = filePath.split("/")[filePath.split("/").length - 1];
+        String folderPath = filePath.replace(fileName, "");
+
+        System.out.println(folderPath);
+
+        new WebDriverWait(driver, 5).until(new FileDownloaded(folderPath, fileName));
+    }
+
+    private class FileDownloaded implements ExpectedCondition {
+
+        private String folderPath;
+        private String filename;
+
+        public FileDownloaded(String folderPath, String filename) {
+            this.folderPath = folderPath;
+            this.filename = filename;
+        }
+
+        @Override
+        public Boolean apply(Object arg0) {
+            File dir = new File(this.folderPath);
+            File[] dirContents = dir.listFiles();
+
+            for (int i = 0; i < dirContents.length; i++) {
+                if (dirContents[i].getName().equals(this.filename)) {
+                    // File has been found
+                    System.out.println("File Found");
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }
