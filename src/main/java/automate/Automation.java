@@ -30,18 +30,8 @@ public class Automation {
         SharesiesSettings settingsPage = app.clickSettings();
         SharesiesReports reportsPage = settingsPage.clickReports();
         
-        // Enter Report details
-        reportsPage.enterReportDetails("January", "October", "2019", "2021");
-        
-        // Export report and wait for download
-        reportsPage.clickCSVReport();
-        reportsPage.clickExport();
-
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        // Download transaction report for given period
+        reportsPage.downloadCSVReport("January", "October", "2019", "2022");
 
         // Close browser
         app.clickLogOut();
