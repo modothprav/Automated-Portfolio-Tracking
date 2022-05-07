@@ -128,12 +128,13 @@ public class YahooPortfolioData extends BasePage {
         // The date value is saved in a different format
         String savedValue = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
+        WebDriverWait wait = new WebDriverWait(driver, 15);
         By savedIconPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()]/td/span/span[text()='Saved']");
-        new WebDriverWait(driver, 15).until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
+        wait.until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
 
         // Check if the value has been entered in the specified field, if not then enter again
         try {
-            new WebDriverWait(driver, 4).until(ExpectedConditions.attributeToBe(dateInput, "value", savedValue));
+            wait.until(ExpectedConditions.attributeToBe(dateInput, "value", savedValue));
         } catch (Exception e) {
             System.out.println("Value not entered");
             dateInput.clear();
@@ -141,8 +142,8 @@ public class YahooPortfolioData extends BasePage {
             dateInput.sendKeys(Keys.TAB);
 
             // Wait for the entered values to be saved, then check again
-            new WebDriverWait(driver, 15).until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
-            new WebDriverWait(driver, 4).until(ExpectedConditions.attributeToBe(dateInput, "value", savedValue));
+            wait.until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
+            wait.until(ExpectedConditions.attributeToBe(dateInput, "value", savedValue));
         }
     }
 
@@ -199,20 +200,21 @@ public class YahooPortfolioData extends BasePage {
      * @param stockRow int The Row number of the stock for which the transaction value is entered.
      */
     private void checkEntry(By inputPath, String text, int stockRow) {
+        WebDriverWait wait = new WebDriverWait(driver, 15);
         By savedIconPath = By.xpath("//table/tbody["+ stockRow +"]/tr[3]/td/table/tbody/tr[last()]/td/span/span[text()='Saved']");
 
         try {
             WebElement inputBox = driver.findElement(inputPath);
-            new WebDriverWait(driver, 15).until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
-            new WebDriverWait(driver, 4).until(ExpectedConditions.attributeToBe(inputBox, "value", text));
+            wait.until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
+            wait.until(ExpectedConditions.attributeToBe(inputBox, "value", text));
         } catch (Exception e) {
             System.out.println("Value not entered");
             WebElement inputBox = driver.findElement(inputPath);
             inputBox.clear();
             inputBox.sendKeys(text);
             
-            new WebDriverWait(driver, 15).until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
-            new WebDriverWait(driver, 4).until(ExpectedConditions.attributeToBe(inputBox, "value", text));
+            wait.until(ExpectedConditions.textToBe(savedIconPath, "Saved"));
+            wait.until(ExpectedConditions.attributeToBe(inputBox, "value", text));
         }
     }
     /**

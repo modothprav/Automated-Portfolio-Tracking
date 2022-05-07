@@ -55,7 +55,8 @@ public final class Transaction {
      * Read the CSV Transaction report downloaded from Sharesies. Save the 
      * information in the report by creating Transaction objects, these objects
      * will be returned in the form of a Map with the stock as the key and its
-     * value being a list of transactions regarding that stock.
+     * value being a list of transactions regarding that stock. After parsing
+     * the transaction file will be deleted.
      * 
      * @param filePath The file path of the CSV Transaction report
      * @return Map<String, List<Transaction>>
@@ -72,12 +73,8 @@ public final class Transaction {
                 String [] values = line.split(",");
 
                 // Assign values to create Transaction objects
-                String orderID = values[0];
-                String tradeDate = values[1];
-                String stock = values[2];
-                String market = values[3];
-                double quantity = Double.parseDouble(values[4]);
-                double price = Double.parseDouble(values[5]);
+                String orderID = values[0], tradeDate = values[1], stock = values[2], market = values[3];
+                double quantity = Double.parseDouble(values[4]), price = Double.parseDouble(values[5]);
                 String transactionType = values[6];
                 double exchangeRate = values[7].isEmpty() ? 0 : Double.parseDouble(values[7]);
                 double fees = values[8].isEmpty() ? 0 : Double.parseDouble((values[8]));
