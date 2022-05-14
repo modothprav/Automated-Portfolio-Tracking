@@ -94,7 +94,8 @@ public class YahooLogin extends BasePage {
         this.enterPassword(credentials.getProperty("yahoo.password"));
         this.clickNextButton();
 
-        new WebDriverWait(driver, 8).until(ExpectedConditions.titleIs("Yahoo New Zealand"));
+        String pageTitle = "Yahoo | Mail, Weather, Search, Politics, News, Finance, Sports & Videos";
+        new WebDriverWait(driver, 8).until(ExpectedConditions.titleIs(pageTitle));
         return new YahooHome();
     }
     

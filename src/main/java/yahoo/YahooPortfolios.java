@@ -15,7 +15,7 @@ public class YahooPortfolios extends BasePage {
      * Constructor
      */
     public YahooPortfolios() {
-        if (!driver.getTitle().equals("Stock portfolio & tracker – Yahoo Finance")) {
+        if (!driver.getTitle().equals("Stock Portfolio & Tracker - Yahoo Finance")) {
             throw new IllegalStateException("This is not the Yahoo Portfolios Page, current Page is " 
             + driver.getCurrentUrl()); 
         }
@@ -28,7 +28,7 @@ public class YahooPortfolios extends BasePage {
      */
     public YahooPortfolioData clickPortfolio() {
         driver.findElement(By.xpath("//a[text()='" + portfolioName +  "']")).click();
-        new WebDriverWait(driver, 8).until(ExpectedConditions.titleIs(portfolioName + " - Stock portfolio & tracker – Yahoo Finance"));
+        new WebDriverWait(driver, 8).until(ExpectedConditions.titleIs(portfolioName + " - Stock Portfolio & Tracker - Yahoo Finance"));
         return new YahooPortfolioData();
     }
     

@@ -27,7 +27,7 @@ public class YahooFinance extends BasePage {
      * Constructor
      */
     public YahooFinance() {
-        if (!driver.getTitle().equals("Yahoo Finance – stock market live, quotes, business & finance news")) {
+        if (!driver.getTitle().equals("Yahoo Finance - Stock Market Live, Quotes, Business & Finance News")) {
             throw new IllegalStateException("This is not the Yahoo Finance Page, current Page is " 
             + driver.getCurrentUrl()); 
         }
@@ -43,7 +43,8 @@ public class YahooFinance extends BasePage {
      */
     public YahooPortfolios goToPortfolioPage() {
         this.portfolioLink.click();
-        new WebDriverWait(driver, 8).until(ExpectedConditions.titleIs("Stock portfolio & tracker – Yahoo Finance"));
+        String pageTitle = "Stock Portfolio & Tracker - Yahoo Finance";
+        new WebDriverWait(driver, 8).until(ExpectedConditions.titleIs(pageTitle));
         return new YahooPortfolios();
     }
 
