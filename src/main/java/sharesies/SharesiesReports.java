@@ -142,11 +142,9 @@ public class SharesiesReports extends BasePage {
         this.clickExport();
 
         // Extract file name and folder path from the absolute file path
-        String filePath = BasePage.config.getProperty("reports.csv.file");
-        String fileName = filePath.split("/")[filePath.split("/").length - 1];
-        String folderPath = filePath.replace(fileName, "");
-
-        new WebDriverWait(driver, 5).until(new FileDownloaded(folderPath, fileName));
+        String fileName = BasePage.config.getProperty("reports.csv.file");
+        String folderPath = System.getProperty("user.dir");
+        new WebDriverWait(driver, 15).until(new FileDownloaded(folderPath, fileName));
     }
 
     /**

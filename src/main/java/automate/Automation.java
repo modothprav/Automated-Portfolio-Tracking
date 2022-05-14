@@ -38,7 +38,8 @@ public class Automation {
         testBase.tearDown();
 
         // Parse and enter transaction details into excel
-        Map<String, List<Transaction>> transactions = Transaction.parseTransactions(BasePage.config.getProperty("reports.csv.file"));
+        String filePath = System.getProperty("user.dir") + "/" +BasePage.config.getProperty("reports.csv.file");
+        Map<String, List<Transaction>> transactions = Transaction.parseTransactions(filePath);
 
         testBase.initialize("url.yahoo.finance");
         
