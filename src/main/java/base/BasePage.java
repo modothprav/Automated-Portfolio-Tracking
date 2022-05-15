@@ -1,13 +1,20 @@
 package base;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
+import com.google.common.io.Files;
+
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 public class BasePage {
     private final static String CONFIGPATH = "/src/main/java/config/config.properties";
@@ -38,10 +45,20 @@ public class BasePage {
     public void initialize(String configURL) {
         String driverPath = System.getProperty("user.dir") + config.getProperty("driver.chromedriver.path");
         System.setProperty("webdriver.chrome.driver", driverPath);
+        
+        // Initialize Chrome options
+        ChromeOptions chromeOptions = new ChromeOptions();
+
+        chromeOptions.addArguments("--disable-gpu");
+        chromeOptions.addArguments("--disable-extensions");
+        chromeOptions.addArguments("--no-sandbox");
+        chromeOptions.addArguments("--disable-dev-shm-usage");
+        chromeOptions.addArguments("--headless");
+        chromeOptions.addArguments("--window-size=1580,1280");
 
         // Initialize Driver
-        driver = new ChromeDriver();
-        
+        driver = new ChromeDriver(chromeOptions);
+
         driver.manage().window().maximize();
         driver.manage().deleteAllCookies();
         driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
@@ -55,5 +72,15 @@ public class BasePage {
      */
     public void tearDown() {
         driver.quit();
+    }
+
+    public void takeScreenshot() {
+        File file = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+        try {
+            String filePath = System.getProperty("user.dir") + "/screenshots/" + LocalDateTime.now().toString() + ".png";
+            Files.copy(file, new File(filePath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

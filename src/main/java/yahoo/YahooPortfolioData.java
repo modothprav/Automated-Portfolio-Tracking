@@ -19,7 +19,7 @@ import base.BasePage;
 public class YahooPortfolioData extends BasePage {
 
     // Object Repository
-    @FindBy(xpath = "//span[text()='My holdings']")
+    @FindBy(xpath = "//*[@id='Lead-3-Portfolios-Proxy']/main/div/section/ul/li[2]/a/span")
     private WebElement holdingsTab;
 
     /**

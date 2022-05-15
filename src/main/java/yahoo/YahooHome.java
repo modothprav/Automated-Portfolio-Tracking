@@ -37,7 +37,8 @@ public class YahooHome extends BasePage{
      */
     public YahooFinance goToYahooFinance() {
         this.financeLink.click();
-        new WebDriverWait(driver, 20).until(ExpectedConditions.titleIs("Yahoo Finance – stock market live, quotes, business & finance news"));
+        String pageTitle = "Yahoo Finance - Stock Market Live, Quotes, Business & Finance News";
+        new WebDriverWait(driver, 20).until(ExpectedConditions.titleIs(pageTitle));
         return new YahooFinance();
     }
 
