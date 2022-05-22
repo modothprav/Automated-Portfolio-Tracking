@@ -77,6 +77,9 @@ public class Automation {
                 
                 portfolioData.clickDropdown(row);
             }
+
+            // Sign out of Yahoo
+            yahooFinance.signOut();
         } catch (Exception e) {
             testBase.takeScreenshot();
             throw e;

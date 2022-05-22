@@ -14,10 +14,10 @@ public class YahooFinance extends BasePage {
     @FindBy(xpath = "//a[@href='/portfolios']")
     private WebElement portfolioLink;
 
-    @FindBy(id = "uh-profile")
+    @FindBy(id = "header-profile-button")
     private WebElement profileButton;
 
-    @FindBy(id = "uh-signedout")
+    @FindBy(id = "profile-signout-link")
     private WebElement signOutButton;
 
     @FindBy(id = "uh-signedin")
