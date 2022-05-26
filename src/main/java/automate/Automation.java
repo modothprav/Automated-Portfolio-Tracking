@@ -17,6 +17,10 @@ import yahoo.YahooPortfolios;
 
 public class Automation {    
     public static void main(String[] args) {
+        if (args.length < 4) {
+            throw new IllegalArgumentException("Not enough Arguments Specifed: {fromMonth} {fromYear} {toMonth} {toYear}");
+        }
+
         // Initialize base page and config properties
         BasePage testBase = new BasePage();
 
