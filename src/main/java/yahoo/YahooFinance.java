@@ -1,5 +1,6 @@
 package yahoo;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -73,6 +74,15 @@ public class YahooFinance extends BasePage {
     public YahooHome signOut() {
         this.clickProfile();
         this.clickSignOut();
+
+        // Check for Sign out confirmation button and click if exists
+        By signOutConfirmPath = By.xpath("//input[@data-logout='yes']");
+        if (driver.findElements(signOutConfirmPath).size() > 0) {
+            driver.findElement(signOutConfirmPath).click();
+        }
+        
+        String pageTitle = "Yahoo | Mail, Weather, Search, Politics, News, Finance, Sports & Videos";
+        new WebDriverWait(driver, 8).until(ExpectedConditions.titleIs(pageTitle));
         return new YahooHome();
     }
 

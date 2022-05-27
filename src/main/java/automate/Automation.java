@@ -17,6 +17,10 @@ import yahoo.YahooPortfolios;
 
 public class Automation {    
     public static void main(String[] args) {
+        if (args.length < 4) {
+            throw new IllegalArgumentException("Not enough Arguments Specifed: {fromMonth} {fromYear} {toMonth} {toYear}");
+        }
+
         // Initialize base page and config properties
         BasePage testBase = new BasePage();
 
@@ -33,7 +37,7 @@ public class Automation {
             SharesiesReports reportsPage = settingsPage.clickReports();
             
             // Download transaction report for given period
-            reportsPage.downloadCSVReport("January", "October", "2019", "2022");
+            reportsPage.downloadCSVReport(args[0], args[2], args[1], args[3]);
 
             // Close browser
             app.clickLogOut();
@@ -80,6 +84,9 @@ public class Automation {
 
             // Sign out of Yahoo
             yahooFinance.signOut();
+
+            testBase.tearDown();
+
         } catch (Exception e) {
             testBase.takeScreenshot();
             throw e;
