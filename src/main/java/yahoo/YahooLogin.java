@@ -60,8 +60,8 @@ public class YahooLogin extends BasePage {
      * @return YahooHome
      */
     public YahooHome login() {
-        String username = System.getenv("yahooUsername");
-        String password = System.getenv("yahooPassword");
+        String username = System.getenv("YAHOO_USERNAME");
+        String password = System.getenv("YAHOO_PASSWORD");
 
         // Set values from a properties file
         if (username == null || password == null) {

@@ -42,8 +42,8 @@ public class SharesiesLogIn extends BasePage {
      * @return SharesiesApp
      */
     public SharesiesApp logIn() {
-        String username = System.getenv("sharesiesUsername");
-        String password = System.getenv("sharesiesPassword");
+        String username = System.getenv("SHARESIES_USERNAME");
+        String password = System.getenv("SHARESIES_PASSWORD");
 
         // Set values from a properties file
         if (username == null || password == null) {
