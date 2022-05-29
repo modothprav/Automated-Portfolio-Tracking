@@ -71,11 +71,14 @@ public final class Transaction {
             
             while ((line = buffer.readLine()) != null) {
                 String [] values = line.split(",");
+                
+                // Only parse BUY transactions
+                String transactionType = values[6];
+                if (!transactionType.equals("BUY")) continue;
 
                 // Assign values to create Transaction objects
                 String orderID = values[0], tradeDate = values[1], stock = values[2], market = values[3];
                 double quantity = Double.parseDouble(values[4]), price = Double.parseDouble(values[5]);
-                String transactionType = values[6];
                 double exchangeRate = values[7].isEmpty() ? 0 : Double.parseDouble(values[7]);
                 double fees = values[8].isEmpty() ? 0 : Double.parseDouble((values[8]));
                 String currency = values[9];
