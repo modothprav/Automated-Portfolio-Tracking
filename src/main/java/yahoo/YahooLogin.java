@@ -40,24 +40,6 @@ public class YahooLogin extends BasePage {
     }
 
     /**
-     * Enters the given username into the username field
-     * in the Yahoo login page.
-     * @param username String
-     */
-    private void enterUsername(String username) {
-        this.usernameField.sendKeys(username);
-    }
-
-    /**
-     * Enter the given password into the the password field
-     * in the Yahoo login page.
-     * @param password String
-     */
-    private void enterPassword(String password) {
-        this.passwordField.sendKeys(password);
-    }
-
-    /**
      * Toggles the 'Stay Signed in' checkbox
      */
     public void clickCheckBox() {
@@ -78,20 +60,35 @@ public class YahooLogin extends BasePage {
      * @return YahooHome
      */
     public YahooHome login() {
-        Properties credentials = new Properties();
-        try {
-            FileInputStream ip = new FileInputStream(System.getProperty("user.dir").toString() + config.getProperty("credentials.file"));
-            credentials.load(ip);
-        } catch (IOException e) {
-            e.printStackTrace();
+        String username = System.getenv("YAHOO_USERNAME");
+        String password = System.getenv("YAHOO_PASSWORD");
+
+        // Set values from a properties file
+        if (username == null || password == null) {
+            Properties credentials = new Properties();
+            try {
+                FileInputStream ip = new FileInputStream(System.getProperty("user.dir").toString() + config.getProperty("credentials.file"));
+                credentials.load(ip);
+
+                username = credentials.getProperty("yahoo.username");
+                password = credentials.getProperty("yahoo.password");
+
+                credentials.clear();
+                System.out.println("Read credentials from Properties file");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         // Enter username
-        this.enterUsername(credentials.getProperty("yahoo.username"));
+        this.usernameField.sendKeys(username);;
+        username = "";
         this.clickNextButton();
 
         // Enter password
-        this.enterPassword(credentials.getProperty("yahoo.password"));
+        this.passwordField.sendKeys(password);;
+        password = "";
         this.clickNextButton();
 
         String pageTitle = "Yahoo | Mail, Weather, Search, Politics, News, Finance, Sports & Videos";

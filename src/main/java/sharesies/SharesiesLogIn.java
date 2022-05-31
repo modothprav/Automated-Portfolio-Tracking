@@ -42,18 +42,34 @@ public class SharesiesLogIn extends BasePage {
      * @return SharesiesApp
      */
     public SharesiesApp logIn() {
-        Properties credentials = new Properties();
-        try {
-            FileInputStream ip = new FileInputStream(System.getProperty("user.dir").toString() + config.getProperty("credentials.file"));
-            credentials.load(ip);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-        emailField.sendKeys(credentials.getProperty("sharesies.username"));
-        passwordField.sendKeys(credentials.getProperty("sharesies.password"));
-        
-        credentials.clear();
+        String username = System.getenv("SHARESIES_USERNAME");
+        String password = System.getenv("SHARESIES_PASSWORD");
+
+        // Set values from a properties file
+        if (username == null || password == null) {
+            Properties credentials = new Properties();
+            try {
+                // Load Credentials file
+                String filePath = System.getProperty("user.dir").toString() + config.getProperty("credentials.file");
+                FileInputStream ip = new FileInputStream(filePath);
+                credentials.load(ip);
+
+                // Set username and password
+                username = credentials.getProperty("sharesies.username");
+                password = credentials.getProperty("sharesies.password");
+
+                credentials.clear();
+                System.out.println("Read credentials from Properties file");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }  
+        } 
+
+        emailField.sendKeys(username);
+        passwordField.sendKeys(password);
+        // Clear values
+        username = ""; password = "";
+
         logInButton.click();
 
         return new SharesiesApp();
