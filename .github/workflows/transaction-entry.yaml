@@ -31,3 +31,8 @@ jobs:
 
     - name: Run Program  
       run: mvn exec:java -Dexec.mainClass=automate.Automation -Dexec.cleanupDaemonThreads=false -Dexec.args="January 2022 January 2022" -e
+      env:
+        SHARESIES_USERNAME: ${{ secrets.SHARESIES_USERNAME }}
+        SHARESIES_PASSWORD: ${{ secrets.SHARESIES_PASSWORD }}
+        YAHOO_USERNAME: ${{ secrets.YAHOO_USERNAME }}
+        YAHOO_PASSWORD: ${{ secrets.YAHOO_PASSWORD }}
