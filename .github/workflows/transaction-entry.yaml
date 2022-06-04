@@ -36,3 +36,17 @@ jobs:
         SHARESIES_PASSWORD: ${{ secrets.SHARESIES_PASSWORD }}
         YAHOO_USERNAME: ${{ secrets.YAHOO_USERNAME }}
         YAHOO_PASSWORD: ${{ secrets.YAHOO_PASSWORD }}
+    
+    - name: Send Screenshot through mail
+      if: ${{ failure() && steps.mainProgram.conclusion == 'failure' }}
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 465
+        username: ${{secrets.MAIL_USERNAME}}
+        password: ${{secrets.MAIL_PASSWORD}}
+        subject: Github Actions - Main Program failed
+        to: pravinmanoj44@gmail.com
+        from: Pravin Modotholi 
+        secure: true
+        attachments: ./screenshots/*.png
