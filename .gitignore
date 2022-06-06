@@ -25,5 +25,7 @@ credentials.properties
 Portfolio.xlsx
 
 # Screenshots
-screenshots/
-!screenshots/.gitkeep
+screenshots/*
+
+# Drivers
+chromedriver

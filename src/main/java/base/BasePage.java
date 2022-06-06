@@ -74,11 +74,21 @@ public class BasePage {
         driver.quit();
     }
 
+    /**
+     * Will create a screenshots folder if it doens't already exist in the 
+     * current directory. Once created will will save the screenshot taken
+     * by the webdriver as a .png file, in the screenshots folder.
+     */
     public void takeScreenshot() {
         File file = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
         try {
-            String filePath = System.getProperty("user.dir") + "/screenshots/" + LocalDateTime.now().toString() + ".png";
-            Files.copy(file, new File(filePath));
+            String folderPath = System.getProperty("user.dir") + "/screenshots/"; 
+            String fileName = LocalDateTime.now().toString() + ".png";
+
+            // Create required directories and copy screenshot
+            new File(folderPath).mkdirs();
+            Files.copy(file, new File(folderPath + fileName));
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
