@@ -25,12 +25,17 @@ jobs:
       run: |
        chmod +x ./scripts/setup.sh
         ./scripts/setup.sh
+    
+    - name: Get Transaction Entry Date
+      run: |
+       chmod +x ./scripts/get-date.sh
+        ./scripts/get-date.sh
 
     - name: Compile with Maven
       run: mvn compile 
 
     - name: Run Program  
-      run: mvn exec:java -Dexec.mainClass=automate.Automation -Dexec.cleanupDaemonThreads=false -Dexec.args="January 2022 January 2022" -e
+      run: mvn exec:java -Dexec.mainClass=automate.Automation -Dexec.cleanupDaemonThreads=false -Dexec.args="$LAST_MONTH $YEAR $LAST_MONTH $YEAR" -e
       env:
         SHARESIES_USERNAME: ${{ secrets.SHARESIES_USERNAME }}
         SHARESIES_PASSWORD: ${{ secrets.SHARESIES_PASSWORD }}
