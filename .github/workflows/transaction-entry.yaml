@@ -1,7 +1,7 @@
 name: Month End Transaction Entry
 
 on:
-  #push: # For testing
+  push: # For testing
   schedule:
     # Second day of the Month
     - cron: 0 0 2 * *
