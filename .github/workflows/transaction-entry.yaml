@@ -34,7 +34,8 @@ jobs:
     - name: Compile with Maven
       run: mvn compile 
 
-    - name: Run Program  
+    - name: Run Program
+      id: mainProgram  
       run: mvn exec:java -Dexec.mainClass=automate.Automation -Dexec.cleanupDaemonThreads=false -Dexec.args="$LAST_MONTH $YEAR $LAST_MONTH $YEAR" -e
       env:
         SHARESIES_USERNAME: ${{ secrets.SHARESIES_USERNAME }}
