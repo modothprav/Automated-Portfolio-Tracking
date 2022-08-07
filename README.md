@@ -1,12 +1,12 @@
-# Automated Transaction Data-Entry
+<h1 align='center'>:chart_with_upwards_trend: Automated Transaction Data-Entry :chart_with_downwards_trend:</h1>
 
 This is a simple Java project built using the [Selenium]() testing framework. It starts off by downloading a transaction `csv` file from the investing brokerage platform [Sharesies]() and then enters that collected data into your own [Yahoo Portfolio](https://finance.yahoo.com/portfolios/). The project is built using the Page Object Model desgin pattern, for greater maintaince, extensions and testing.
 
 <p align='center'> </br>
-<img src="./docs/demo.gif">
+<img src="./docs/Demo.gif">
 </p>
 
-## How to Run
+## :arrow_forward: How to Run
 
 ### Step 1
 Create Accounts for both [Yahoo Finance]() and [Sharesies]() and have transaction data present in Sheresies i.e. you have participated in the action of buying and/or selling stocks or funds.
@@ -62,7 +62,7 @@ mvn exec:java -Dexec.mainClass=automate.Automation -Dexec.cleanupDaemonThreads=f
 
 ---
 
-## About
+## :closed_book: About
 
 I reguraly invest small amounts into stocks/funds through Sharesies and used to manually enter in the transaction data for each of my orders into Yahoo Finance. I did this to gain a better understanding of how well each of my holdings were doing overtime, since Yahoo Fiance provides more analycits and performance metrics for various stocks. 
 
