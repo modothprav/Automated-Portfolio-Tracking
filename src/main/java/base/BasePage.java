@@ -77,7 +77,7 @@ public class BasePage {
     /**
      * Will create a screenshots folder if it doens't already exist in the 
      * current directory. Once created will will save the screenshot taken
-     * by the webdriver as a .png file, in the screenshots folder.
+     * by the webdriver as a .png file, in the newly created folder.
      */
     public void takeScreenshot() {
         File file = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
