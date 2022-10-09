@@ -1,7 +1,6 @@
 name: Month End Transaction Entry
 
 on:
-  #push: # For testing
   schedule:
     # Second day of the Month
     - cron: 0 0 2 * *
@@ -52,7 +51,7 @@ jobs:
         username: ${{secrets.MAIL_USERNAME}}
         password: ${{secrets.MAIL_PASSWORD}}
         subject: Github Actions - Main Program failed
-        to: pravinmanoj44@gmail.com
+        to: ${{secrets.MAIL_USERNAME}}
         from: Pravin Modotholi 
         secure: true
         attachments: ./screenshots/*.png
