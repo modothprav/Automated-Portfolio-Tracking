@@ -92,7 +92,7 @@ public class SharesiesReports extends BasePage {
     }
 
     /**
-     * Selects the starting and ending month and year 
+     * Selects the start and end periods for month and year values 
      * period the transactions history should include.
      * @param fromMonth String The starting month e.g. "January"
      * @param toMonth String The ending month e.g. "October"
@@ -107,15 +107,15 @@ public class SharesiesReports extends BasePage {
     }
 
     /**
-     * Click the CSV Report export type on the reports page 
+     * Click the CSV Report export type option on the reports page 
      */
     private void clickCSVReport() {
         this.csvReport.click();
     }
 
     /**
-     * If the period infromation and report type have all been 
-     * entered the export button can be clicked to export the 
+     * If the duration and report type have all been 
+     * entered, the export button can be clicked to export the 
      * requested report type within the given period. 
      */
     private void clickExport() {
@@ -148,10 +148,10 @@ public class SharesiesReports extends BasePage {
     }
 
     /**
-     * A helper calls whcih allows the creation of a custom ExpectedContiion
+     * A helper class which allows the creation of a custom ExpectedContiion
      * that can be used to prompt the WebDriver to wait until our custom
      * contition has been met. In this case the custom condition checks
-     * whether our given file is present in the given folder and will return
+     * whether the specfied file is present in the given folder and will return
      * true if present or false otherwise.
      */
     private class FileDownloaded implements ExpectedCondition {
