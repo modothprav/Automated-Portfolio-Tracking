@@ -36,16 +36,16 @@ public class YahooPortfolioData extends BasePage {
     public void clickHoldingsTab() {
         this.holdingsTab.click();
 
-        // Check if holdings page is loaded
+        // Check if stocks under the holdings page have loaded
         By checkHoldingPath = By.xpath("//div[@id='Lead-3-Portfolios-Proxy']");
         new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOfElementLocated(checkHoldingPath));
     }
 
     /**
      * Clicks the dropdown button to view all individual
-     * transactions for the current stock and returns true. If its the first transaction
+     * transactions for the current stock. If its the first transaction
      * to be entered for the stock, then the add lot button will be cliked
-     * within the row hence performing a dropdown action and a false value will be returned. 
+     * instead of the dropdown button within the row and a false value will be returned. 
      * @param stockRow int Row number of the Stock to view transactions for
      * @return boolean True if the dropdown button is clicked false otherwise.
      */
@@ -76,7 +76,7 @@ public class YahooPortfolioData extends BasePage {
 
     /**
      * Adds another individual transaction row to be filled in for 
-     * a signle stock. Will wait until that element is loaded beofre
+     * a signle stock. Will wait until that element is loaded before
      * proceeding with execution. 
      * @param stockRow int The Row number of the stock to add another transaction for.
      */
@@ -112,8 +112,8 @@ public class YahooPortfolioData extends BasePage {
 
     /**
      * Enters the transaction date for a stock. The transaction date is 
-     * entered in the final transaction row of a stock. Also checks if the date 
-     * value has been entered correctly.
+     * entered in the final transaction row of a stock, just above the add lot button. 
+     * Also checks if the date value has been entered correctly.
      * @param stockRow int The Row number of the stock to enter the transaction value for
      * @param date LocalDate The LocalDate object 
      */

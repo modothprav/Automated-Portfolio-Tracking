@@ -31,7 +31,7 @@ public class YahooHome extends BasePage{
     }
 
     /**
-     * Clicks the 'Finance' available at the navigaiton bar on 
+     * Clicks the 'Finance' link available at the navigaiton bar on 
      * the Yahoo Home page. Returns a YahooFinance page object.
      * @return YahooFinance
      */
